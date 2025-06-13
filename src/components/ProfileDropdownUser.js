@@ -12,7 +12,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {LogOut, User} from "lucide-react";
+import {LayoutDashboardIcon, LogOut, User} from "lucide-react";
 import {useAuth} from "@/context/AuthContext";
 import {useState} from "react";
 import {
@@ -23,7 +23,7 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 
-export function ProfileDropdown({ user, authLoading }) {
+export function ProfileDropdownUser({ user, authLoading }) {
     const { logout } = useAuth();
     const [confirmLogoutDialogOpen, setConfirmLogoutDialogOpen] = useState(false);
 
@@ -49,44 +49,26 @@ export function ProfileDropdown({ user, authLoading }) {
         );
     }
 
-    // Handle case where user is null (not logged in)
-    if (!user) {
-        return (
-            <Button variant='ghost' className='relative w-fit p-0 rounded-full cursor-pointer'>
-                <div className="flex justify-center items-center gap-2 rounded-xl border py-0.5 px-2">
-                    <Avatar className='h-8 w-8'>
-                        <AvatarFallback className="font-bold border border-gray-200">
-                            <User className="h-5 w-5 text-muted-foreground" />
-                        </AvatarFallback>
-                    </Avatar>
-                    <span>Guest</span>
-                </div>
-            </Button>
-        );
-    }
-
     return (
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-                <Button variant='ghost' className='relative w-fit p-0 rounded-xl cursor-pointer'>
-                    <div className="flex justify-center items-center gap-2 rounded-xl border py-1 px-2">
-                        <Avatar className='h-8 w-8'>
-                            {/* Use user.photo directly, fallback to empty string if undefined */}
-                            <AvatarImage src={user.photo || ''} alt={user.name || 'User Avatar'} />
-                            <AvatarFallback className="font-bold border border-gray-200">
-                                {/* Use optional chaining for user.name in split/map/join */}
-                                {user.name
-                                    ? user.name
-                                        .split(" ")
-                                        .slice(0, 2)
-                                        .map((word) => word.charAt(0))
-                                        .join("")
-                                        .toUpperCase()
-                                    : <User className="h-5 w-5" />} {/* Fallback if name is also missing */}
-                            </AvatarFallback>
-                        </Avatar>
-                        <span>{user.name || 'Guest'}</span> {/* Display user name or 'Guest' */}
-                    </div>
+                <Button
+                    className="rounded-2xl bg-[#2C3E9E] px-4 py-5 text-sm font-medium text-white hover:bg-[#3f51b5] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-600 cursor-pointer flex items-center gap-2"
+                >
+                    <Avatar className='h-8 w-8 border border-gray-300'>
+                        <AvatarImage src={user.photo || ''} alt={user.name || 'User Avatar'} />
+                        <AvatarFallback className="font-bold border border-gray-200 text-black">
+                            {user.name
+                                ? user.name
+                                    .split(" ")
+                                    .slice(0, 2)
+                                    .map((word) => word.charAt(0))
+                                    .join("")
+                                    .toUpperCase()
+                                : <User className="h-5 w-5" />}
+                        </AvatarFallback>
+                    </Avatar>
+                    <span>{user.name || 'Guest'}</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-56' align='end' forceMount>
@@ -101,9 +83,9 @@ export function ProfileDropdown({ user, authLoading }) {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                        <Link href='#'>
-                            <User />
-                            Profile
+                        <Link href='/dashboard'>
+                            <LayoutDashboardIcon />
+                            Dashboard
                         </Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

@@ -4,10 +4,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation";
+import {useAuth} from "@/context/AuthContext"
 
 import { Menu, X } from 'lucide-react'
+import {ProfileDropdownUser} from "@/components/ProfileDropdownUser";
 
 export default function Navbar() {
+    const { user, authLoading } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const pathname = usePathname()
     const [currentHash, setCurrentHash] = useState('')
@@ -123,11 +126,21 @@ export default function Navbar() {
                             {/* Theme Toggle - You can implement your own theme toggle here */}
 
                             <div className="hidden md:flex items-center space-x-3">
-                                <Link href="/auth/login">
-                                    <button className="rounded-[24px] bg-[#2C3E9E] px-4 py-2 text-sm font-medium text-white hover:bg-[#3f51b5] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-600 cursor-pointer">
-                                        Masuk / Daftar
-                                    </button>
-                                </Link>
+                                {authLoading ? (
+                                    <div className="text-sm text-gray-500 dark:text-gray-300">Loading user...</div>
+                                ) : (
+                                    <>
+                                        {!user ? (
+                                            <Link href="/auth/login">
+                                                <button className="rounded-[24px] bg-[#2C3E9E] px-4 py-2 text-sm font-medium text-white hover:bg-[#3f51b5] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-600 cursor-pointer">
+                                                    Masuk / Daftar
+                                                </button>
+                                            </Link>
+                                        ) : (
+                                            <ProfileDropdownUser user={user} />
+                                        )}
+                                    </>
+                                )}
                             </div>
 
                             {/* Mobile Menu Button */}
@@ -156,12 +169,21 @@ export default function Navbar() {
                                 {link.label}
                             </Link>
                         ))}
+
                         <div className="pt-4 pb-2 border-t border-gray-200 dark:border-gray-700">
-                            <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
-                                <button className="w-full flex items-center justify-center rounded-md bg-[#2C3E9E] px-4 py-2 text-base font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600">
-                                    Masuk / Daftar
-                                </button>
-                            </Link>
+                            {!authLoading && (
+                                <>
+                                    {!user ? (
+                                        <Link href="/auth/login" onClick={() => setIsMenuOpen(false)}>
+                                            <button className="w-full flex items-center justify-center rounded-md bg-[#2C3E9E] px-4 py-2 text-base font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600">
+                                                Masuk / Daftar
+                                            </button>
+                                        </Link>
+                                    ) : (
+                                        <ProfileDropdownUser user={user} />
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
