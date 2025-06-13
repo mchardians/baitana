@@ -5,51 +5,21 @@ import Link from "next/link";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Autoplay} from "swiper/modules";
 import Image from "next/image";
+import useSiteContent from "@/hooks/useSiteContent";
 
 export default function FacilitySection() {
+    const { facilities, isLoading, fetchFacilities } = useSiteContent()
     const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
         setMounted(true)
-    }, [])
+        fetchFacilities()
+    }, [fetchFacilities])
 
-    const facilities = [
-        {
-            id: 1,
-            name: "Aula Serbaguna",
-            image: "/placeholder.svg?height=300&width=500",
-            isAvailable: true,
-            capacity: 200,
-            description:
-                "Aula serbaguna yang luas dan nyaman untuk berbagai kegiatan seperti pernikahan, seminar, dan acara keagamaan dengan fasilitas lengkap.",
-        },
-        {
-            id: 2,
-            name: "Perpustakaan",
-            image: "/placeholder.svg?height=300&width=500",
-            isAvailable: true,
-            capacity: 50,
-            description:
-                "Perpustakaan dengan koleksi buku-buku Islam yang lengkap, ruangan yang nyaman untuk membaca dan belajar.",
-        },
-        {
-            id: 3,
-            name: "Ruang Kelas",
-            image: "/placeholder.svg?height=300&width=500",
-            isAvailable: false,
-            capacity: 30,
-            description:
-                "Ruang kelas untuk kegiatan belajar mengajar, kajian, dan diskusi kelompok dengan fasilitas papan tulis dan proyektor.",
-        },
-        {
-            id: 4,
-            name: "Taman Bermain",
-            image: "/placeholder.svg?height=300&width=500",
-            isAvailable: true,
-            capacity: 100,
-            description: "Area taman bermain untuk anak-anak dengan berbagai permainan yang aman dan nyaman untuk keluarga.",
-        },
-    ]
+    const mappedFacilities = facilities.map((facility) => ({
+        ...facility,
+        isAvailable: facility.status === "available"
+    }))
 
     return (
         <section id="facilities" className="px-6 py-12 lg:px-[86px] lg:pt-[92px] lg:pb-0">
@@ -124,7 +94,7 @@ export default function FacilitySection() {
                                 }}
                                 className="h-full w-full rounded-3xl shadow-lg"
                             >
-                                {facilities.map((facility, index) => (
+                                {mappedFacilities.map((facility, index) => (
                                     <SwiperSlide key={facility.id}>
                                         <div className={`overflow-hidden bg-white h-full relative ${facility.isAvailable ? "group" : ""}`}>
                                             {/*/!* Hover Overlay with Reservation Button - Only for Available Facilities *!/*/}
@@ -153,14 +123,14 @@ export default function FacilitySection() {
                                                     </div>
 
                                                     {/* Mobile: Always Visible Button */}
-                                                    <div className="absolute bottom-4 right-4 md:hidden z-20">
-                                                        <Link
-                                                            href={`/reservasi/${facility.id}`}
-                                                            className="bg-[#2C3E9E] hover:bg-[#3f51b5] text-white font-bold py-2 px-4 rounded-full text-sm shadow-lg"
-                                                        >
-                                                            Reservasi
-                                                        </Link>
-                                                    </div>
+                                                    {/*<div className="absolute bottom-4 right-4 md:hidden z-20">*/}
+                                                    {/*    <Link*/}
+                                                    {/*        href={`/reservasi/${facility.id}`}*/}
+                                                    {/*        className="bg-[#2C3E9E] hover:bg-[#3f51b5] text-white font-bold py-2 px-4 rounded-full text-sm shadow-lg"*/}
+                                                    {/*    >*/}
+                                                    {/*        Reservasi*/}
+                                                    {/*    </Link>*/}
+                                                    {/*</div>*/}
                                                 </>
                                             )}
 
@@ -168,7 +138,7 @@ export default function FacilitySection() {
                                             <div className="relative h-52 lg:h-74 w-full">
                                                 {/* Background Image */}
                                                 <Image
-                                                    src="/images/landing/hero-background.png"
+                                                    src={facility.cover_image}
                                                     alt="Aula serbaguna"
                                                     fill
                                                     className="object-cover"
@@ -196,7 +166,7 @@ export default function FacilitySection() {
                                             </div>
 
                                             {/* Card Content Section */}
-                                            <div className="p-4 lg:p-6 w-1/2 lg:w-full">
+                                            <div className="p-4 lg:p-6 lg:w-full">
                                                 <h3 className="mb-1 lg:mb-3 text-sm lg:text-xl font-bold text-[#2C3E9E]">Deskripsi</h3>
                                                 <p className="text-black text-sm lg:text-[16px] text-justify">
                                                     {facility.description}

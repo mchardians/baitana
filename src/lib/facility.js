@@ -11,7 +11,7 @@ export async function getFacilities() {
 
         return result.data?.facilities || []
     } catch (error) {
-        console.error("Error getting facilities: ", error.message)
+        console.log("Error getting facilities: ", error.message)
         throw error
     }
 }

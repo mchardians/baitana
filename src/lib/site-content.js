@@ -18,3 +18,55 @@ export async function getPrayerTimes() {
         console.error('Error getting prayer times:', error)
     }
 }
+
+export async function getFacilities() {
+    try {
+        const res = await fetch(`${API_URL}/facilities`);
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch: ${res.status}`);
+        }
+
+        const result = await res.json();
+
+        if (result.status && result.data) {
+            return {
+                facilities: result.data.facilities || [],
+                message: result.message || null
+            };
+        }
+    } catch (error) {
+        console.error("Error fetching facilities:", error);
+        return {
+            facilities: [],
+            message: "Failed to fetch facilities"
+        };
+    }
+}
+
+export async function getNews() {
+    try {
+        const res = await fetch(`${API_URL}/news/published`);
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch: ${res.status}`);
+        }
+
+        const result = await res.json();
+
+        if (result.status && result.data) {
+            return {
+                news: result.data.news || [],
+                message: result.message || null
+            };
+        }
+    } catch (error) {
+        console.error("Error fetching news:", error);
+        return {
+            news: [],
+            serverTime: null,
+            message: "Failed to fetch news"
+        };
+    }
+}
+
