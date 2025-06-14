@@ -9,15 +9,9 @@ import React from 'react'
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function NewsDetailPage({ params }) {
-    const { news, isLoading, fetchNews } = useSiteContent()
+    const { news, isLoading } = useSiteContent()
     const resolvedParams = React.use(params);
     const slug = resolvedParams.slug;
-
-    useEffect(() => {
-        if (!news.length) {
-            fetchNews();
-        }
-    }, [fetchNews, news.length]);
 
     const post = useMemo(() => {
         if (news.length > 0 && slug) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { toast } from "sonner"
 import {getNews, getPrayerTimes} from "@/lib/site-content";
 import { getFacilities } from "@/lib/site-content";
@@ -39,6 +39,12 @@ export default function useSiteContent() {
         }
     }, [])
 
+    useEffect(() => {
+        if (facilities.length === 0 && !isLoading) {
+            fetchFacilities();
+        }
+    }, []);
+
     const fetchNews = useCallback(async () => {
         setIsLoading(true)
         try {
@@ -51,6 +57,12 @@ export default function useSiteContent() {
             setIsLoading(false)
         }
     }, [])
+
+    useEffect(() => {
+        if (news.length === 0 && !isLoading) {
+            fetchNews();
+        }
+    }, []);
 
     return {
         prayerTimes,
