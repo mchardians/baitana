@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }) => {
     }, [router]);
 
     const refreshToken = useCallback(async () => {
+        setAuthLoading(true);
         try {
             const { token: newTokenValue, ttl: newTtlValue } = await apiClient.refreshToken();
             setToken(newTokenValue);
@@ -54,6 +55,8 @@ export const AuthProvider = ({ children }) => {
             console.error("Failed to refresh token:", err.message);
             logout(); // Force logout if refresh fails
             throw err;
+        } finally {
+            setAuthLoading(false);
         }
     }, [logout]);
 
@@ -99,7 +102,8 @@ export const AuthProvider = ({ children }) => {
         return () => clearInterval(intervalId); // Cleanup on unmount/dependency change
     }, [token, tokenExpiryTime, refreshToken, logout]);
 
-    const fetchUser = async (accessToken) => {
+    const fetchUser = useCallback(async (accessToken) => {
+        setAuthLoading(true);
         try {
             setLoading(true);
             const response = await fetch(`${BASE_URL}/auth/me`, {
@@ -128,11 +132,12 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (err) {
             console.error("Error fetching user:", err.message);
-            logout(); // Logout on any fetch user error
+            logout();
         } finally {
+            setAuthLoading(false);
             setLoading(false);
         }
-    };
+    }, [logout, refreshToken]);
 
     const login = async (credentials) => {
         setAuthLoading(true);
