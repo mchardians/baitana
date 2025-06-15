@@ -10,7 +10,7 @@ export default function useFacilities() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
     const [isPreviewImageModalOpen, setIsPreviewImageModalOpen] = useState(false);
-    const [imagesToPreview, setImagesToPreview] = useState([]);
+    const [imagesToPreview, setImagesToPreview] = useState({ coverImage: null, previewImages: [] });
     const [selectedFacility, setSelectedFacility] = useState(null);
 
     const fetchFacilities = useCallback (async () => {
@@ -54,6 +54,7 @@ export default function useFacilities() {
         } catch (error) {
             toast.error("Gagal memperbarui data facility")
             console.log("Edit facility error:", error.message)
+            console.log(error)
             throw error
         } finally {
             setIsLoading(false);
@@ -93,24 +94,18 @@ export default function useFacilities() {
         setIsDeleteAlertOpen(true)
     }
 
-    const openPreviewImagesModal = (item) => {
-        const images = [];
-
-        if (item?.cover_image) {
-            images.push(item.cover_image);
-        }
-        if (Array.isArray(item?.image_previews)) {
-            images.push(...item.image_previews);
-        }
-
-        setImagesToPreview(images);
+    const openPreviewImagesModal = (facility) => {
+        setImagesToPreview({
+            coverImage: facility.cover_image || null,
+            previewImages: Array.isArray(facility.image_previews) ? facility.image_previews : []
+        });
         setIsPreviewImageModalOpen(true);
     };
 
     const closePreviewImagesModal = () => {
-        setImagesToPreview(null)
-        setIsPreviewImageModalOpen(false)
-    }
+        setIsPreviewImageModalOpen(false);
+        setImagesToPreview({ coverImage: null, previewImages: [] });
+    };
 
     return {
         facilities,

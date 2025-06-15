@@ -18,33 +18,6 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
         enableSorting: false,
         size: 60,
     },
-    // {
-    //     accessorKey: "cover_image",
-    //     header: () => <div className="text-center font-semibold">Cover</div>,
-    //     cell: ({ row }) => {
-    //         const facility = row.original
-    //         const coverUrl = facility.cover_image ?? null
-    //
-    //         return (
-    //             <div className="flex justify-center">
-    //                 <Avatar className="h-16 w-16 object-cover object-center">
-    //                     <AvatarImage src={coverUrl || "/placeholder.svg"} alt={facility.name} />
-    //                     <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
-    //                         {
-    //                             facility.name ?
-    //                                 facility.name.split(" ").slice(0, 2)
-    //                                     .map((word) => word.charAt(0)).join(" ").toUpperCase()
-    //                                 :
-    //                                 <ImageOff className="h-4 w-4" />
-    //                         }
-    //                     </AvatarFallback>
-    //                 </Avatar>
-    //             </div>
-    //         )
-    //     },
-    //     enableSorting: false,
-    //     size: 80,
-    // },
     {
         accessorKey: "name_upper",
         header: ({ column }) => {
@@ -65,7 +38,7 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
                 <div className="space-y-1">
                     <div className="font-medium text-gray-900">{facility?.name_upper}</div>
                     <Badge variant="outline" className="bg-blue-50 text-[#2C3E9E] border-[#2C3E9E]/30 text-[11px] px-1">
-                        {facility?.name_upper}
+                        {facility?.facility_code}
                     </Badge>
                 </div>
             )
@@ -152,32 +125,32 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
         size: 150,
     },
     {
-        accessorKey: "transaction_receipt",
+        accessorKey: "image_previews_action",
         header: () => <div className="text-center font-semibold">Images</div>,
         cell: ({ row }) => {
-            const coverImage = row.original.cover_image;
-            const imagePreviews = row.original.image_previews;
+            const facility = row.original;
+            const hasImages = facility.cover_image || (Array.isArray(facility.image_previews) && facility.image_previews.length > 0);
 
-            const hasImage = coverImage || (Array.isArray(imagePreviews) && imagePreviews.length > 0);
-
-            if (hasImage) {
+            if (hasImages) {
                 return (
                     <div className="flex items-center justify-center gap-2">
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => openPreviewImagesModal(row.original)}
+                            onClick={() => openPreviewImagesModal(facility)}
                             className="h-8 px-3 text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-700 hover:border-gray-400 cursor-pointer"
                         >
                             <Eye className="h-3.5 w-3.5" />
                         </Button>
                     </div>
-                )
+                );
             }
-            return <div className="flex flex-col justify-center items-center text-muted-foreground space-y-1">
-                <FileX className="w-4 h-4" />
-                <span className="text-xs text-center">Tidak ada</span>
-            </div>;
+            return (
+                <div className="flex flex-col justify-center items-center text-muted-foreground space-y-1">
+                    <FileX className="w-4 h-4" />
+                    <span className="text-xs text-center">Tidak ada</span>
+                </div>
+            );
         },
         size: 100,
     },
@@ -220,7 +193,7 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
                         onClick={() => openEditModal(facility)}
                         className="h-8 px-3 text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300"
                     >
-                        <Pencil className="h-3.5 w-3.5 mr-1" />
+                        <Pencil className="h-3.5 w-3.5" />
                     </Button>
                     <Button
                         variant="outline"
@@ -228,7 +201,7 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
                         onClick={() => openDeleteAlert(facility)}
                         className="h-8 px-3 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
                     >
-                        <Trash2 className="h-3.5 w-3.5 mr-1" />
+                        <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                 </div>
             )

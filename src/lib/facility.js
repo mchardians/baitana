@@ -16,7 +16,8 @@ export async function getFacilities() {
     }
 }
 
-export async function createFacility(facilityData) {
+export async function
+createFacility(facilityData) {
     try {
         return await apiClient.makeRequest(FACILITIES_API, {
             method: "POST",

@@ -4,8 +4,9 @@ import useFacilities from "@/hooks/useFacilities";
 import { useEffect } from "react";
 import { DataTable } from "@/app/(administrator)/master/facilities/data-table";
 import { createColumns } from "@/app/(administrator)/master/facilities/column";
-// import { UserForm } from "@/components/users/UserForm";
-// import DeleteAlert from "@/components/users/DeleteAlert";
+import { FacilityForm } from "@/components/facilities/FacilityForm";
+import ImagePreviewModal from "@/components/ImagePreviewModal";
+import DeleteAlert from "@/components/facilities/DeleteAlert";
 
 
 export default function FacilityPage() {
@@ -16,7 +17,6 @@ export default function FacilityPage() {
         isModalOpen,
         setIsModalOpen,
         isPreviewImageModalOpen,
-        setIsPreviewImageModalOpen,
         isDeleteAlertOpen,
         setIsDeleteAlertOpen,
         imagesToPreview,
@@ -52,23 +52,28 @@ export default function FacilityPage() {
                 onAddNew={openAddModal}
             />
 
-            {/*<UserForm*/}
-            {/*    isModalOpen={isModalOpen}*/}
-            {/*    setIsModalOpen={setIsModalOpen}*/}
-            {/*    selectedUser={selectedUser}*/}
-            {/*    handleAddUser={handleAddUser}*/}
-            {/*    handleEditUser={handleEditUser}*/}
-            {/*    isLoading={isLoading}*/}
-            {/*    roles={roles}*/}
-            {/*/>*/}
+            <FacilityForm
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                selectedFacility={selectedFacility}
+                handleAddFacility={handleAddFacility}
+                handleEditFacility={handleEditFacility}
+                isLoading={isLoading}
+            />
 
-            {/*<DeleteAlert*/}
-            {/*    isDeleteAlertOpen={isDeleteAlertOpen}*/}
-            {/*    setIsDeleteAlertOpen={setIsDeleteAlertOpen}*/}
-            {/*    selectedUser={selectedUser}*/}
-            {/*    handleDeleteUser={handleDeleteUser}*/}
-            {/*    isLoading={isLoading}*/}
-            {/*/>*/}
+            <ImagePreviewModal
+                isOpen={isPreviewImageModalOpen} // Mengontrol visibilitas modal
+                onClose={closePreviewImagesModal} // Fungsi untuk menutup modal
+                images={imagesToPreview} // Array gambar yang akan ditampilkan
+            />
+
+            <DeleteAlert
+                isDeleteAlertOpen={isDeleteAlertOpen}
+                setIsDeleteAlertOpen={setIsDeleteAlertOpen}
+                selectedFacility={selectedFacility}
+                handleDeleteFacility={handleDeleteFacility}
+                isLoading={isLoading}
+            />
         </div>
     );
 }
