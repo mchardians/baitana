@@ -54,7 +54,6 @@ export default function useFacilities() {
         } catch (error) {
             toast.error("Gagal memperbarui data facility")
             console.log("Edit facility error:", error.message)
-            console.log(error)
             throw error
         } finally {
             setIsLoading(false);

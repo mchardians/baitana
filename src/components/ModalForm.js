@@ -31,9 +31,14 @@ export function ModalForm({
         "2xl": "sm:max-w-[1024px]",
         "3xl": "sm:max-w-[1280px]",
     };
+
+    if (!isOpen) {
+        return null;
+    }
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className={`${sizeClass[size]} gap-2`}>
+            <DialogContent className={`${sizeClass[size]} gap-2 max-h-[96vh] overflow-y-auto`}>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>

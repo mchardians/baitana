@@ -8,9 +8,7 @@ import { FacilityForm } from "@/components/facilities/FacilityForm";
 import ImagePreviewModal from "@/components/ImagePreviewModal";
 import DeleteAlert from "@/components/facilities/DeleteAlert";
 
-
 export default function FacilityPage() {
-
     const {
         facilities,
         isLoading,

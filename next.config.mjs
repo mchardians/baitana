@@ -10,7 +10,9 @@ const nextConfig = {
             },
             // Anda bisa menambahkan pola lain di sini jika ada domain gambar lain
         ],
-    }
+    },
+    reactStrictMode: false,
+    transpilePackages: ['quill'],
 };
 
 export default nextConfig;
