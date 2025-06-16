@@ -1,7 +1,7 @@
 "use client"
 
 import useNews from "@/hooks/useNews";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "@/app/(administrator)/master/news/data-table";
 import { createColumns } from "@/app/(administrator)/master/news/column";
 import { NewsForm } from "@/components/news/NewsForm";
@@ -45,18 +45,14 @@ export default function DashboardNewsPage() {
         openDeleteAlert,
     } = useNews();
 
+    const [activeTab, setActiveTab] = useState("published");
+
     useEffect(() => {
-        fetchNews()
+        fetchNews(activeTab)
         fetchNewsCategories()
-    }, [fetchNews, fetchNewsCategories])
+    }, [fetchNews, fetchNewsCategories, activeTab])
 
     const columns = createColumns(openEditModal, openPreviewImageModal, openDetailModal, openDeleteAlert)
-
-    const filteredNews = {
-        published: news.filter((item) => item.status === "published"),
-        drafted: news.filter((item) => item.status === "drafted"),
-        archived: news.filter((item) => item.status === "archived"),
-    }
 
     return (
         <div className="container mx-auto space-y-6">
@@ -67,7 +63,7 @@ export default function DashboardNewsPage() {
                 </p>
             </div>
 
-            <Tabs defaultValue="published" className="w-full">
+            <Tabs defaultValue="published" className="w-full" onValueChange={setActiveTab}>
                 <TabsList className="mb-4">
                     <TabsTrigger
                         value="published"
@@ -92,7 +88,7 @@ export default function DashboardNewsPage() {
                 <TabsContent value="published">
                     <DataTable
                         columns={columns}
-                        data={filteredNews.published}
+                        data={news}
                         isLoading={isLoading}
                         onAddNew={openAddModal}
                     />
@@ -101,7 +97,7 @@ export default function DashboardNewsPage() {
                 <TabsContent value="drafted">
                     <DataTable
                         columns={columns}
-                        data={filteredNews.drafted}
+                        data={news}
                         isLoading={isLoading}
                         onAddNew={openAddModal}
                     />
@@ -110,7 +106,7 @@ export default function DashboardNewsPage() {
                 <TabsContent value="archived">
                     <DataTable
                         columns={columns}
-                        data={filteredNews.archived}
+                        data={news}
                         isLoading={isLoading}
                         onAddNew={openAddModal}
                     />

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { getNews, createNews, updateNews, deleteNews } from "@/lib/news";
+import {getNews, getNewsByParam, createNews, updateNews, deleteNews} from "@/lib/news";
 import { getNewsCategories } from "@/lib/news-category";
 
 export default function useFacilities() {
@@ -17,11 +17,16 @@ export default function useFacilities() {
     const [selectedNewsForDetail, setSelectedNewsForDetail] = useState(null);
     const [imageToPreview, setImageToPreview] = useState(null);
 
-    const fetchNews = useCallback (async () => {
+    const fetchNews = useCallback (async (status = null) => {
         setIsLoading(true);
         try {
-            const news = await getNews();
-            setNews(news);
+            let newsData;
+            if (status) {
+                newsData = await getNewsByParam("status", status);
+            } else {
+                newsData = await getNews();
+            }
+            setNews(newsData);
         } catch (error) {
             toast.error("Gagal memuat data news.");
             console.error("Fetch news error:", error);

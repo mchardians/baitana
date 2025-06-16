@@ -16,6 +16,22 @@ export async function getNews() {
     }
 }
 
+export async function getNewsByParam(param = "status", value = "") {
+    try {
+        const query = `${encodeURIComponent(param)}=${encodeURIComponent(value)}`;
+        const url = `${NEWS_API}?${query}`;
+
+        const result = await apiClient.makeRequest(url, {
+            method: "GET",
+        });
+
+        return result.data?.news || []
+    } catch (error) {
+        console.log("Error getting news: ", error.message)
+        throw error
+    }
+}
+
 export async function createNews(newsData) {
     try {
         return await apiClient.makeRequest(NEWS_API, {
