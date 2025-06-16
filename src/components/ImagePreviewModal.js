@@ -70,7 +70,7 @@ export default function ImagePreviewModal({ isOpen, onClose, images }) {
                                                     alt={`Preview ${index + 1}`}
                                                     fill
                                                     sizes="100vw"
-                                                    className="object-contain p-1"
+                                                    className="object-cover"
                                                 />
                                             </div>
                                         ))}

@@ -16,8 +16,7 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {Upload, X, ImageOff, Trash2 } from "lucide-react"
+import { Upload, X, ImageOff, Trash2 } from "lucide-react"
 import { ModalForm } from "@/components/ModalForm";
 import { showMultipleErrorToasts } from "@/utlis/toast-error-handle";
 import { toast } from "sonner"
@@ -43,11 +42,8 @@ export function FacilityForm({
     const [selectedCoverFile, setSelectedCoverFile] = useState(null);
     const [coverPreviewUrl, setCoverPreviewUrl] = useState(null);
 
-    // State untuk preview images (file baru yang akan diupload)
     const [newPreviewFiles, setNewPreviewFiles] = useState([]);
-    // State untuk preview images yang sudah ada dan akan ditampilkan (dari DB)
     const [existingPreviewImages, setExistingPreviewImages] = useState([]);
-    // State untuk menyimpan ID gambar preview yang akan dihapus
     const [removedPreviewIds, setRemovedPreviewIds] = useState([]);
 
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
@@ -114,7 +110,6 @@ export function FacilityForm({
         }
     }, []);
 
-    // Reset form when modal opens/closes or selected user changes
     useEffect(() => {
         if (isModalOpen) {
             form.reset({
@@ -125,7 +120,6 @@ export function FacilityForm({
                 status: selectedFacility?.status || "available",
             });
 
-            // Set cover image preview
             if (selectedFacility?.cover_image) {
                 setCoverPreviewUrl(selectedFacility.cover_image);
             } else {
@@ -133,7 +127,6 @@ export function FacilityForm({
             }
             setSelectedCoverFile(null);
 
-            // Set existing preview images
             if (Array.isArray(selectedFacility?.image_previews) && selectedFacility.image_previews.length > 0) {
                 setExistingPreviewImages(selectedFacility.image_previews);
             } else {
@@ -143,7 +136,6 @@ export function FacilityForm({
             setRemovedPreviewIds([]);
 
         } else {
-            // Reset all states when modal closes
             form.reset({
                 name: "",
                 description: "",
@@ -159,11 +151,9 @@ export function FacilityForm({
         }
     }, [isModalOpen, selectedFacility, form]);
 
-    // Handle cover image file selection
     const handleCoverFileSelect = (event) => {
         const file = event.target.files?.[0];
         if (file) {
-            // Kita tidak perlu validasi schema di sini karena sudah ada di Zod resolver di onSubmit
             setSelectedCoverFile(file);
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -208,19 +198,16 @@ export function FacilityForm({
         try {
             const formData = new FormData();
 
-            // Append main facility data
             formData.append("name", values.name || "");
             formData.append("description", values.description || "");
             formData.append("capacity", values.capacity || 0);
             formData.append("price_per_hour", values.price_per_hour || 0);
             formData.append("status", values.status || "available");
 
-            // Append cover image
             if (selectedCoverFile) {
                 formData.append("cover_image", selectedCoverFile);
             } else if (isEditMode && !coverPreviewUrl) {
-                // If in edit mode and cover image was removed (no file, no preview URL means user deleted it)
-                formData.append("cover_image", ""); // Kirim string kosong atau penanda untuk hapus
+                formData.append("cover_image", "");
             }
 
             // Append new preview files
@@ -235,25 +222,19 @@ export function FacilityForm({
                 });
             }
 
-            // For PUT/PATCH requests in Laravel, you might need to spoof the method
-            // if you are not sending directly as _method PUT.
-            // Example: formData.append("_method", "PUT");
-            // This depends on your backend setup.
-
             if (isEditMode) {
                 await handleEditFacility(formData);
             } else {
                 await handleAddFacility(formData);
             }
 
-            // Reset form and states after successful submission
             form.reset();
             setSelectedCoverFile(null);
             setCoverPreviewUrl(null);
             setNewPreviewFiles([]);
             setExistingPreviewImages([]);
             setRemovedPreviewIds([]);
-            setIsModalOpen(false); // Close modal on success
+            setIsModalOpen(false);
         } catch (error) {
             handleDisplayError(error);
         }
@@ -423,14 +404,14 @@ export function FacilityForm({
                                 <div className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
                                     <h4 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-2 text-center">Gambar Utama Fasilitas</h4>
                                     <div className="py-4 w-full flex justify-center">
-                                        <div className="relative w-full max-w-sm h-56 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 flex-shrink-0">
+                                        <div className="relative w-full max-w-sm h-[200px] md:h-[270px] rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 flex-shrink-0">
                                             {coverPreviewUrl ? (
                                                 <Image
                                                     src={coverPreviewUrl}
                                                     alt="Cover Preview"
                                                     fill
                                                     sizes="(max-width: 768px) 100vw, 50vw"
-                                                    className="object-contain"
+                                                    className="object-cover"
                                                 />
                                             ) : (
                                                 <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
@@ -485,7 +466,7 @@ export function FacilityForm({
                                     {/* Existing Preview Images */}
                                     {existingPreviewImages.map((img, index) => (
                                         <div
-                                            key={img.facility_id + index}
+                                            key={index}
                                             className={`relative w-24 h-24 rounded-lg shadow-sm border ${removedPreviewIds.includes(img.id) ? 'border-red-500 opacity-50' : 'border-gray-200 dark:border-gray-600'} group`}
                                         >
                                             <Image
@@ -493,7 +474,7 @@ export function FacilityForm({
                                                 alt={`Existing Preview ${img.id}`}
                                                 fill
                                                 sizes="100vw"
-                                                className="object-contain p-1 rounded-md" // Tambahkan padding di sini dan pastikan rounded-md
+                                                className="object-cover rounded-md" // Tambahkan padding di sini dan pastikan rounded-md
                                             />
                                             <Button
                                                 type="button"
