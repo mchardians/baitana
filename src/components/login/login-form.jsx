@@ -236,9 +236,9 @@ export function LoginForm({ className, ...props }) {
                 <div className="grid gap-3">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <a href="#" className="ml-auto text-sm underline-offset-2 hover:underline">
+                    <Link href="/password/forgot" className="ml-auto text-sm underline-offset-2 hover:underline">
                       Lupa password?
-                    </a>
+                    </Link>
                   </div>
                   <div className="flex items-center justify-center relative">
                     <Input
