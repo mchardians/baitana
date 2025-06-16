@@ -205,6 +205,38 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const forgotPassword = async (email) => {
+        setAuthLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/forgot-password', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(email),
+            });
+
+            if (response.status === 200) {
+                toast.success(response.data.message || "Link reset password telah dikirim ke email Anda.");
+                return { success: true, message: response.data.message || "Link reset password telah dikirim." };
+            } else {
+                const errorData = response.data || {};
+                const errorMessage = errorData.message || "Gagal mengirim link reset password. Silakan coba lagi.";
+                setError(new Error(errorMessage)); // Set error state
+                toast.error(errorMessage);
+                return { success: false, message: errorMessage };
+            }
+        } catch (err) {
+            console.error("Error during forgot password request in AuthContext:", err);
+            const errorMessage = err.response?.data?.message || "Terjadi kesalahan saat mengirim permintaan. Pastikan email Anda benar.";
+            setError(new Error(errorMessage)); // Set error state
+            toast.error(errorMessage);
+            return { success: false, message: errorMessage };
+        } finally {
+            setAuthLoading(false); // Selesai loading
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -217,6 +249,7 @@ export const AuthProvider = ({ children }) => {
                 logout,
                 register,
                 refreshToken,
+                forgotPassword,
             }}
         >
             {children}
