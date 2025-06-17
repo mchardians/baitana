@@ -74,7 +74,7 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
                 <div className="flex flex-col items-center justify-center space-y-1">
                     <div className="font-medium text-xs text-gray-900">{facility?.capacity} Orang</div>
                     <Badge variant="outline" className="bg-blue-50 text-[#2C3E9E] border-[#2C3E9E]/30 text-[11px] px-1">
-                        {facility?.price_per_hour_format} / jam
+                        {facility?.price_per_hour_idn_format} / jam
                     </Badge>
                 </div>
             )
