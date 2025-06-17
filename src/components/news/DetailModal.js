@@ -64,7 +64,7 @@ export function NewsDetailModal({ isOpen, onClose, newsData }) {
                     {newsData.news_category && newsData.news_category.length > 0 ? (
                         newsData.news_category.map((category, idx) => (
                             <Badge key={category.id} variant="outline" className={`${categoryColors[idx % categoryColors.length]} text-xs px-3 py-1`}>
-                                {category.name}
+                                {category.name_upper}
                             </Badge>
                         ))
                     ) : (

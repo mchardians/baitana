@@ -62,7 +62,7 @@ export const createColumns = (openEditModal, openPreviewImageModal, openDetailMo
                                 variant="outline"
                                 className={`${categoryColors[idx % categoryColors.length]} text-xs px-3 py-1`}
                             >
-                                {category.name}
+                                {category.name_upper}
                             </Badge>
                         ))
                     ) : (
