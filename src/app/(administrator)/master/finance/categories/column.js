@@ -81,7 +81,6 @@ export const createColumns = (openEditModal, openDeleteAlert) => [
                     <div className="flex justify-center">
                         {(() => {
                             const typeValue = row.getValue("type");
-                            const displayType = typeValue.charAt(0).toUpperCase() + typeValue.slice(1);
 
                             const badgeClasses = typeValue === "income"
                                 ? "bg-green-50 text-green-700 border-green-200"
@@ -89,7 +88,7 @@ export const createColumns = (openEditModal, openDeleteAlert) => [
 
                             return (
                                 <Badge variant="outline" className={`${badgeClasses} font-medium px-3 py-1`}>
-                                    {displayType}
+                                    {row.original.type_upper_first}
                                 </Badge>
                             );
                         })()}
