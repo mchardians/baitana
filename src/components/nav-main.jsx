@@ -26,13 +26,13 @@ export function NavMain({
     const pathname = usePathname();
 
     const isActiveItem = (url) => {
-        if (url === '#') return false;
-        return pathname === url || pathname.startsWith(url + '/');
+        if (!url || url === '#') return false;
+        return pathname === url;
     };
 
     const hasActiveSubItem = (subItems) => {
-        if (!subItems) return false;
-        return subItems.some(subItem => isActiveItem(subItem.url));
+        if (!subItems || subItems.length === 0) return false;
+        return subItems.some(subItem => pathname === subItem.url || pathname.startsWith(subItem.url + '/'));
     };
 
     return (
