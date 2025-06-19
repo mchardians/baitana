@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/tabs"
 
 export default function DashboardNewsPage() {
+    const [activeTab, setActiveTab] = useState("published");
 
     const {
         news,
@@ -43,9 +44,7 @@ export default function DashboardNewsPage() {
         openDetailModal,
         closeDetailModal,
         openDeleteAlert,
-    } = useNews();
-
-    const [activeTab, setActiveTab] = useState("published");
+    } = useNews(activeTab);
 
     useEffect(() => {
         fetchNews(activeTab)

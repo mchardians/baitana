@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import {getNews, getNewsByParam, createNews, updateNews, deleteNews} from "@/lib/news";
 import { getNewsCategories } from "@/lib/news-category";
 
-export default function useFacilities() {
+export default function useNews(activeTab = "published") {
     const [news, setNews] = useState([]);
     const [newsCategories, setNewsCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,7 @@ export default function useFacilities() {
             const res = await createNews(value);
             toast.success(res.message);
             setIsModalOpen(false);
-            await fetchNews();
+            await fetchNews(activeTab);
         } catch (error) {
             toast.error("Gagal menambahkan data berita")
             console.log("Add news error:", error.message)
@@ -72,7 +72,7 @@ export default function useFacilities() {
             const res = await updateNews(selectedNews.id, value);
             toast.success(res.message);
             setIsModalOpen(false);
-            await fetchNews();
+            await fetchNews(activeTab);
         } catch (error) {
             toast.error("Gagal memperbarui data berita")
             console.log("Edit news error:", error.message)
@@ -90,7 +90,7 @@ export default function useFacilities() {
             const res = await deleteNews(selectedNews.id);
             toast.success(res.message);
             setIsDeleteAlertOpen(false);
-            await fetchNews();
+            await fetchNews(activeTab);
         } catch (error) {
             toast.error("Gagal menghapus data berita")
             console.log("Delete news error:", error?.originalError?.message)
