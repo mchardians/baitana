@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import {useCallback, useEffect, useState} from "react"
 import useSiteContent from "@/hooks/useSiteContent";
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, Pagination } from "swiper/modules"
@@ -27,7 +27,7 @@ export default function HeroSection() {
     }, [fetchPrayerTimes])
 
     // Dengan Detik
-    const calculateNextPrayer = () => {
+    const calculateNextPrayer = useCallback(() => {
         if (!prayerTimes) return
 
         const now = new Date()
@@ -100,7 +100,7 @@ export default function HeroSection() {
             setExpectedFormat(1);
             setTimeUntilNext(`${String(seconds).padStart(2, '0')} detik`)
         }
-    }
+    }, [prayerTimes])
 
     useEffect(() => {
         if (prayerTimes) {
@@ -109,7 +109,7 @@ export default function HeroSection() {
             }, 1000);
             return () => clearInterval(interval);
         }
-    }, [prayerTimes]);
+    }, [prayerTimes, calculateNextPrayer]);
 
     const formatCurrentDate = () => {
         const today = new Date()

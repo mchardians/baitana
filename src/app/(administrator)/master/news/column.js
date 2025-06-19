@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, Eye, FileX, Image, Pencil, Trash2 } from "lucide-react"
+import { ArrowUpDown, Eye, FileX, FileImage, Pencil, Trash2 } from "lucide-react"
 
 export const createColumns = (openEditModal, openPreviewImageModal, openDetailModal, openDeleteAlert) => [
     {
@@ -118,7 +118,7 @@ export const createColumns = (openEditModal, openPreviewImageModal, openDetailMo
                             onClick={() => openPreviewImageModal(news)}
                             className="h-8 px-3 text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-700 hover:border-gray-400 cursor-pointer"
                         >
-                            <Image className="h-3.5 w-3.5" />
+                            <FileImage className="h-3.5 w-3.5" />
                         </Button>
                     </div>
                 );

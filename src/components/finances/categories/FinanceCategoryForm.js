@@ -90,7 +90,7 @@ export function FinanceCategoryForm({
                 });
             }
         }
-    }, []);
+    }, [setFocus]);
 
     useEffect(() => {
         if (isModalOpen) {

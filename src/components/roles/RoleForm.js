@@ -90,7 +90,7 @@ export function RoleForm({
                 });
             }
         }
-    }, []);
+    }, [setFocus]);
 
     // Reset form when modal opens/closes or selected roles changes
     useEffect(() => {

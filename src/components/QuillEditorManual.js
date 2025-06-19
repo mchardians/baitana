@@ -31,7 +31,8 @@ function QuillEditorManual({ value, onChange, readOnly = false, placeholder = ''
     }, [onChange]);
 
     useEffect(() => {
-        if (!editorContainerRef.current) return;
+        const editorContainer = editorContainerRef.current;
+        if (!editorContainer) return;
 
         if (!quillInstanceRef.current) {
             console.log("INITIALIZING QUILL INSTANCE");
@@ -112,7 +113,6 @@ function QuillEditorManual({ value, onChange, readOnly = false, placeholder = ''
         }
 
         return () => {
-            console.log("CLEANUP EFFECT - Removing Quill instance.");
             if (quillInstanceRef.current) {
                 if (textChangeHandlerRef.current) {
                     quillInstanceRef.current.off('text-change', textChangeHandlerRef.current);
@@ -121,14 +121,14 @@ function QuillEditorManual({ value, onChange, readOnly = false, placeholder = ''
             }
             textChangeHandlerRef.current = null;
 
-            if (editorContainerRef.current) {
-                while (editorContainerRef.current.firstChild) {
-                    editorContainerRef.current.removeChild(editorContainerRef.current.firstChild);
+            if (editorContainer) {
+                while (editorContainer.firstChild) {
+                    editorContainer.removeChild(editorContainer.firstChild);
                 }
             }
             initialValueSetRef.current = false;
         };
-    }, [debouncedOnChange]);
+    }, [debouncedOnChange, placeholder, readOnly, value]);
 
     useEffect(() => {
         if (quillInstanceRef.current && initialValueSetRef.current) {

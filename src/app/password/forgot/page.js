@@ -1,31 +1,6 @@
-"use client"
-
-import { useState } from "react";
-import { toast } from "sonner";
-import { useAuth } from "@/context/AuthContext";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { ForgotPasswordForm } from "@/components/password/ForgotPasswordForm";
 
 export default function ForgotPassword() {
-    const { forgotPassword, authLoading, error } = useAuth();
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessage("");
-
-        const result = await forgotPassword(email);
-
-        if (result.success) {
-            setMessage(result.message);
-            setEmail("");
-        } else {
-            setMessage(result.message);
-        }
-    };
     return (
         <div className={"flex min-h-screen flex-col items-center justify-center bg-gray-50 py-12 px-4 dark:bg-gray-950"}>
             <div className="mx-auto w-full max-w-md space-y-8">
@@ -34,37 +9,10 @@ export default function ForgotPassword() {
                         Forgot your password?
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-                        Enter the email address associated with your account and we'll send you a link to reset your password.
+                        Enter the email address associated with your account and we&apos;ll send you a link to reset your password.
                     </p>
                 </div>
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                    <div>
-                        <Label htmlFor="email" className="sr-only">
-                            Email address
-                        </Label>
-                        <Input id="email"
-                               name="email"
-                               type="email"
-                               autoComplete="email"
-                               required placeholder="Email address"
-                               value={email}
-                               onChange={(e) => setEmail(e.target.value)}
-                               disabled={authLoading}
-                        />
-                    </div>
-                    <Button type="submit" className="w-full bg-[#2C3E9E] hover:bg-[#3f51b5]">
-                        {authLoading ? "Sending..." : "Reset password"}
-                    </Button>
-                </form>
-                <div className="flex justify-center">
-                    <Link
-                        href="/auth/login"
-                        className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                        prefetch={false}
-                    >
-                        Back to login
-                    </Link>
-                </div>
+                <ForgotPasswordForm />
             </div>
         </div>
     )

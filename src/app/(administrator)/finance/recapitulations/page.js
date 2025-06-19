@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import useFinanceRecapitulations from "@/hooks/useFinanceRecapitulations";
-import {DataTable} from "@/app/(administrator)/finance/recapitulations/data-table";
+import { DataTable } from "@/app/(administrator)/finance/recapitulations/data-table";
 import { createColumns } from "@/app/(administrator)/finance/recapitulations/column";
 
 export default function FinanceRecapitulationsPage() {
@@ -17,15 +17,9 @@ export default function FinanceRecapitulationsPage() {
     } = useFinanceRecapitulations();
 
     useEffect(() => {
-        fetchFinanceRecapitulations(
-            currentFilterDates.startDate,
-            currentFilterDates.endDate
-        )
-    }, [
-        currentFilterDates.startDate,
-        currentFilterDates.endDate,
-        fetchFinanceRecapitulations
-    ])
+        const { startDate, endDate } = currentFilterDates;
+        fetchFinanceRecapitulations(startDate, endDate);
+    }, [currentFilterDates, fetchFinanceRecapitulations]);
 
     const columns = createColumns()
 

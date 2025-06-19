@@ -89,7 +89,7 @@ export function NewsCategoryForm({
                 });
             }
         }
-    }, []);
+    }, [setFocus]);
 
     useEffect(() => {
         if (isModalOpen) {

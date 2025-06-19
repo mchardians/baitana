@@ -106,7 +106,7 @@ export function UserForm({
                 });
             }
         }
-    }, []);
+    }, [setFocus]);
 
     // Reset form when modal opens/closes or selected user changes
     useEffect(() => {

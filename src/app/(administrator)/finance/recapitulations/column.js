@@ -10,10 +10,12 @@ export const createColumns = () => [
             const filteredRows = table.getFilteredRowModel().rows;
             const currentItem = row.original;
 
+            if (!currentItem) return null;
+
             const filteredIndex = filteredRows.findIndex(
                 r =>
-                    r.original.date === currentItem.date &&
-                    r.original.description === currentItem.description
+                    r.original?.date === currentItem?.date &&
+                    r.original?.description === currentItem?.description
             );
 
             const displayIndex = filteredIndex !== -1 ? filteredIndex + 1 : row.index + 1;

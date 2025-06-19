@@ -43,7 +43,7 @@ export default function useSiteContent() {
         if (facilities.length === 0 && !isLoading) {
             fetchFacilities();
         }
-    }, []);
+    }, [facilities.length, isLoading, fetchFacilities]);
 
     const fetchNews = useCallback(async () => {
         setIsLoading(true)
@@ -62,7 +62,7 @@ export default function useSiteContent() {
         if (news.length === 0 && !isLoading) {
             fetchNews();
         }
-    }, []);
+    }, [news.length, isLoading, fetchNews]);
 
     return {
         prayerTimes,

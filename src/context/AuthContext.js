@@ -60,48 +60,6 @@ export const AuthProvider = ({ children }) => {
         }
     }, [logout]);
 
-    // Initial load and token check
-    useEffect(() => {
-        const savedToken = apiClient.getToken();
-        const savedExpiryTime = apiClient.getExpiryTime();
-
-        if (savedToken && savedExpiryTime && Date.now() < savedExpiryTime) {
-            setToken(savedToken);
-            setTokenExpiryTime(savedExpiryTime);
-            fetchUser(savedToken);
-        } else {
-            apiClient.removeToken();
-            setToken(null);
-            setUser(null);
-            setTokenExpiryTime(0);
-            setLoading(false);
-        }
-    }, []);
-
-    // Token refresh interval logic
-    useEffect(() => {
-        const remainingTtl = (tokenExpiryTime - Date.now()) / 1000;
-
-        if (!token || !tokenExpiryTime || remainingTtl <= 60) {
-            if (token && remainingTtl <= 0) {
-                logout(); // Logout if token is expired
-            }
-            return; // Skip setting interval
-        }
-
-        const refreshTriggerInMs = (remainingTtl - 60) * 1000;
-
-        const intervalId = setInterval(() => {
-            if (apiClient.hasToken()) {
-                refreshToken();
-            } else {
-                clearInterval(intervalId); // Stop interval if no token
-            }
-        }, refreshTriggerInMs);
-
-        return () => clearInterval(intervalId); // Cleanup on unmount/dependency change
-    }, [token, tokenExpiryTime, refreshToken, logout]);
-
     const fetchUser = useCallback(async (accessToken) => {
         setAuthLoading(true);
         try {
@@ -138,6 +96,48 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         }
     }, [logout, refreshToken]);
+
+    // Initial load and token check
+    useEffect(() => {
+        const savedToken = apiClient.getToken();
+        const savedExpiryTime = apiClient.getExpiryTime();
+
+        if (savedToken && savedExpiryTime && Date.now() < savedExpiryTime) {
+            setToken(savedToken);
+            setTokenExpiryTime(savedExpiryTime);
+            fetchUser(savedToken);
+        } else {
+            apiClient.removeToken();
+            setToken(null);
+            setUser(null);
+            setTokenExpiryTime(0);
+            setLoading(false);
+        }
+    }, [fetchUser]);
+
+    // Token refresh interval logic
+    useEffect(() => {
+        const remainingTtl = (tokenExpiryTime - Date.now()) / 1000;
+
+        if (!token || !tokenExpiryTime || remainingTtl <= 60) {
+            if (token && remainingTtl <= 0) {
+                logout(); // Logout if token is expired
+            }
+            return; // Skip setting interval
+        }
+
+        const refreshTriggerInMs = (remainingTtl - 60) * 1000;
+
+        const intervalId = setInterval(() => {
+            if (apiClient.hasToken()) {
+                refreshToken();
+            } else {
+                clearInterval(intervalId); // Stop interval if no token
+            }
+        }, refreshTriggerInMs);
+
+        return () => clearInterval(intervalId); // Cleanup on unmount/dependency change
+    }, [token, tokenExpiryTime, refreshToken, logout]);
 
     const login = async (credentials) => {
         setAuthLoading(true);

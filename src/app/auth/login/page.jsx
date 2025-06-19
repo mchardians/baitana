@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { LoginForm } from "@/components/login/login-form";
 
 export default function LoginPage() {
@@ -24,7 +25,9 @@ export default function LoginPage() {
             }}
         >
             <div className="w-full max-w-sm md:max-w-3xl">
-                <LoginForm title={"Selamat Datang Kembali!"} description={"Silahkan login untuk masuk ke sistem."} />
+                <Suspense fallback={<div>Loading login form...</div>}>
+                    <LoginForm title={"Selamat Datang Kembali!"} description={"Silahkan login untuk masuk ke sistem."} />
+                </Suspense>
             </div>
         </div>
     );
