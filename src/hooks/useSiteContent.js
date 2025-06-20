@@ -39,12 +39,6 @@ export default function useSiteContent() {
         }
     }, [])
 
-    useEffect(() => {
-        if (facilities.length === 0 && !isLoading) {
-            fetchFacilities();
-        }
-    }, [facilities.length, isLoading, fetchFacilities]);
-
     const fetchNews = useCallback(async () => {
         setIsLoading(true)
         try {
@@ -59,16 +53,16 @@ export default function useSiteContent() {
     }, [])
 
     useEffect(() => {
-        if (news.length === 0 && !isLoading) {
-            fetchNews();
-        }
-    }, [news.length, isLoading, fetchNews]);
+        fetchFacilities()
+        fetchNews()
+        fetchPrayerTimes()
+    }, [fetchFacilities, fetchNews, fetchPrayerTimes])
 
     return {
         prayerTimes,
         facilities,
         news,
-        isLoading: isLoading,
+        isLoading,
         fetchPrayerTimes,
         fetchFacilities,
         fetchNews
