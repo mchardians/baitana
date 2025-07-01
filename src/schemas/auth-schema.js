@@ -39,3 +39,27 @@ export const registerSchema = z
         message: "Password dan konfirmasi password tidak cocok",
         path: ["password_confirmation"],
     });
+
+export const resetPasswordSchema = z.object({
+    email: z
+        .string({
+            required_error: "Email wajib diisi",
+        })
+        .email("Format email tidak valid"),
+    password: z
+        .string({
+            required_error: "Password wajib diisi",
+        })
+        .min(8, "Password minimal 8 karakter")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            "Password harus mengandung huruf besar, huruf kecil, dan angka"
+        ),
+    password_confirmation: z
+        .string({
+            required_error: "Konfirmasi password wajib diisi",
+        }),
+}).refine((data) => data.password === data.password_confirmation, {
+    message: "Password dan konfirmasi password tidak cocok",
+    path: ["password_confirmation"],
+});

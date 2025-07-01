@@ -210,30 +210,73 @@ export const AuthProvider = ({ children }) => {
         setError(null);
 
         try {
-            const response = await fetch('/forgot-password', {
+            const response = await fetch(`${BASE_URL}/auth/forgot-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(email),
+                body: JSON.stringify({email}),
             });
 
-            if (response.status === 200) {
-                toast.success(response.data.message || "Link reset password telah dikirim ke email Anda.");
-                return { success: true, message: response.data.message || "Link reset password telah dikirim." };
+            const result = await response.json();
+
+            if (response.ok && result.status === "success") {
+                toast.success(result.message || "Link reset password telah dikirim ke email Anda.");
+                return {
+                    success: true,
+                    message: result.message || null,
+                    throttle: result.data?.throttle_info || null,
+                };
             } else {
-                const errorData = response.data || {};
-                const errorMessage = errorData.message || "Gagal mengirim link reset password. Silakan coba lagi.";
-                setError(new Error(errorMessage)); // Set error state
+                const errorMessage = result.message || "Gagal mengirim link reset password. Silakan coba lagi.";
+                setError(new Error(errorMessage));
                 toast.error(errorMessage);
                 return { success: false, message: errorMessage };
             }
         } catch (err) {
             console.error("Error during forgot password request in AuthContext:", err);
-            const errorMessage = err.response?.data?.message || "Terjadi kesalahan saat mengirim permintaan. Pastikan email Anda benar.";
-            setError(new Error(errorMessage)); // Set error state
+            const errorMessage = err?.message || "Terjadi kesalahan saat mengirim permintaan. Pastikan email Anda benar.";
+            setError(new Error(errorMessage));
             toast.error(errorMessage);
             return { success: false, message: errorMessage };
         } finally {
-            setAuthLoading(false); // Selesai loading
+            setAuthLoading(false);
+        }
+    };
+
+    const resetPassword = async ({ email, password, password_confirmation }) => {
+        setAuthLoading(true);
+        setError(null);
+
+        try {
+            const searchParams = new URLSearchParams(window.location.search);
+            const token = searchParams.get("token");
+
+            const response = await fetch(`${BASE_URL}/auth/reset-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token,
+                    email,
+                    password,
+                    password_confirmation,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.status === "success") {
+                toast.success(data.message || "Password berhasil direset.");
+                return { success: true, message: data.message };
+            } else {
+                const errorMessage = data.message || "Gagal mereset password.";
+                const error = new Error(errorMessage);
+                error.errors = data.errors || {};
+                throw error;
+            }
+        } catch (err) {
+            setError(err);
+            return { success: false, message: err.message };
+        } finally {
+            setAuthLoading(false);
         }
     };
 
@@ -250,6 +293,7 @@ export const AuthProvider = ({ children }) => {
                 register,
                 refreshToken,
                 forgotPassword,
+                resetPassword,
             }}
         >
             {children}

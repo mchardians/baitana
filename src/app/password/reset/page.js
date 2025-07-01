@@ -1,17 +1,30 @@
-import { GalleryVerticalEnd } from "lucide-react";
-import {Reset} from "@/components/password/reset";
+import {FormResetPassword} from "@/components/password/FormResetPassword";
 
 export default function PasswordReset() {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-            <div className="flex w-full max-w-sm flex-col gap-6">
-                <a href="#" className="flex items-center gap-2 self-center font-medium">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                        <GalleryVerticalEnd className="size-4" />
-                    </div>
-                    Acme Inc.
-                </a>
-                <Reset />
+        <div
+            className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10"
+            style={{
+                backgroundImage: `
+                    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px), /* Pola Vertikal (Lapisan Atas) */
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px), /* Pola Horizontal (Lapisan Atas) */
+                    linear-gradient(to right, #e0e7ff, var(--muted))
+                `,
+                backgroundSize: `
+                    30px 30px,    
+                    30px 30px,    
+                    100% 100%     
+                `,
+                backgroundRepeat: `
+                    repeat,      
+                    repeat,      
+                    no-repeat     
+                `,
+                backgroundColor: 'var(--muted)',
+            }}
+        >
+            <div className="flex w-full max-w-sm md:max-w-lg justify-center">
+                <FormResetPassword title={"Password Reset!"} description={"Enter your email and new password to reset."} />
             </div>
         </div>
     )
