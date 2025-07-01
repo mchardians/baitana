@@ -23,12 +23,12 @@ export default function FacilitySection() {
 
     return (
         <section id="facilities" className="px-6 py-12 lg:px-[86px] lg:pt-[92px] lg:pb-0">
-            <div className="container">
+            {/*<div className="container">*/}
                 <h1 className="text-[#2C3E9E] text-2xl lg:text-[36px] font-bold">Fasilitas Masjid</h1>
                 <h1 className="text-black text-sm lg:text-2xl text-justify lg:text-left font-extralight mb-6 lg:mb-12">Beberapa layanan yang dapat dinikmati oleh para pengunjung.</h1>
 
-                <div className="flex flex-col-reverse lg:flex-row gap-4 lg:gap-7 justify-between">
-                    <div data-aos="fade-up" className="bg-white border border-black rounded-[30px] p-4 text-[#2C3E9E]">
+                <div className="flex flex-col-reverse lg:flex-row gap-4 lg:gap-7 justify-between items-end">
+                    <div data-aos="fade-up" className="w-full lg:w-1/2 bg-white border border-black rounded-[30px] p-4 text-[#2C3E9E]">
                         <h1 className="text-xl lg:text-[28px] mb-3 lg:mb-6">Cara Reservasi</h1>
                         <div className="flex flex-col items-center gap-1 lg:gap-3">
                             <div className="flex items-center justify-between gap-2 lg:gap-5">
@@ -95,7 +95,7 @@ export default function FacilitySection() {
                                 className="h-full w-full rounded-3xl shadow-lg"
                             >
                                 {mappedFacilities.map((facility, index) => (
-                                    <SwiperSlide key={facility.id}>
+                                    <SwiperSlide key={facility.id} className="mr-0">
                                         <div className={`overflow-hidden bg-white h-full relative ${facility.isAvailable ? "group" : ""}`}>
                                             {/*/!* Hover Overlay with Reservation Button - Only for Available Facilities *!/*/}
                                             {/*{facility.isAvailable && (*/}
@@ -179,7 +179,7 @@ export default function FacilitySection() {
                         )}
                     </div>
                 </div>
-            </div>
+            {/*</div>*/}
         </section>
     )
 }

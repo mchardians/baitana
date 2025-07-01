@@ -7,22 +7,39 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle
+} from "@/components/ui/alert-dialog";
+
 export function ForgotPasswordForm() {
-    const { forgotPassword, authLoading, error } = useAuth();
+    const { forgotPassword, authLoading } = useAuth();
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+
+    const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
+        setError("");
 
         const result = await forgotPassword(email);
 
         if (result.success) {
             setMessage(result.message);
             setEmail("");
+            setSuccessDialogOpen(true)
         } else {
             setMessage(result.message);
+            setErrorDialogOpen(true);
         }
     };
 
@@ -56,6 +73,54 @@ export function ForgotPasswordForm() {
                     Back to login
                 </Link>
             </div>
+
+            {/* Success Modal */}
+            {message && (
+                <AlertDialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="text-center text-green-600">
+                                Success!
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-center">
+                                {message}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction
+                                className="mx-auto"
+                                onClick={() => setSuccessDialogOpen(false)}
+                            >
+                                OK
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+
+            {/* Error Modal */}
+            {error && (
+                <AlertDialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="text-center text-red-500">
+                                Password Reset Failed
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-center">
+                                {error}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction
+                                className="mx-auto"
+                                onClick={() => setErrorDialogOpen(false)}
+                            >
+                                OK
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
         </>
     )
 }

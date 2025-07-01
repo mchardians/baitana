@@ -67,7 +67,7 @@ export function ModalForm({
                                 Batal
                             </Button>
                             <Button type="submit" disabled={isLoading} className="bg-[#2C3E9E] hover:bg-[#243280]">
-                                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isLoading && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
                                 {submitLabel}
                             </Button>
                         </DialogFooter>
