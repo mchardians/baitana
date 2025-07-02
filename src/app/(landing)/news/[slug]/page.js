@@ -1,11 +1,11 @@
 "use client"
 
+import React from 'react'
+import { useMemo } from "react";
+import useSiteContent from "@/hooks/useSiteContent";
 import Image from "next/image";
 import Link from "next/link";
-import NewsSection from "@/components/landing/NewsSection";
-import useSiteContent from "@/hooks/useSiteContent";
-import { useEffect, useMemo } from "react";
-import React from 'react'
+import NewsSection from "@/components/landing/news/NewsSection";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function NewsDetailPage({ params }) {
