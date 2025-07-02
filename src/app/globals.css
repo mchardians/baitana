@@ -143,3 +143,36 @@
 .sonner-toast[data-sonner-toast] {
   overflow: visible !important;
 }
+
+/* Swiper */
+.swiper-pagination-custom .swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  background-color: #d1d5db;
+  opacity: 1;
+  border-radius: 9999px;
+  margin: 0 4px;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-custom .swiper-pagination-bullet-active {
+  width: 28px;
+  height: 6px;
+  background-color: white;
+}
+
+.facility-carousel-pagination .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background-color: #2C3E9E;
+  opacity: 1;
+  border-radius: 9999px;
+  margin: 0 4px;
+  transition: all 0.3s ease;
+}
+
+.facility-carousel-pagination .swiper-pagination-bullet-active {
+  width: 34px;
+  height: 8px;
+  background-color: #2C3E9E;
+}

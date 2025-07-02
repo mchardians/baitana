@@ -47,9 +47,9 @@ export default function DashboardNewsPage() {
     } = useNews(activeTab);
 
     useEffect(() => {
-        fetchNews()
+        fetchNews(activeTab)
         fetchNewsCategories()
-    }, [fetchNews, fetchNewsCategories])
+    }, [activeTab, fetchNews, fetchNewsCategories])
 
     const columns = createColumns(openEditModal, openPreviewImageModal, openDetailModal, openDeleteAlert)
 

@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import NewsSection from "@/components/landing/NewsSection";
+import NewsSection from "@/components/landing/news/NewsSection";
 import useSiteContent from "@/hooks/useSiteContent";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -18,7 +18,6 @@ export default function NewsDetailPage({ params }) {
     const { news, isLoading} = useSiteContent()
 
     const resolvedParams = React.use(params);
-    console.log(resolvedParams)
     const categorySlugFromUrl = decodeURIComponent(resolvedParams.categorySlug);
 
     const formattedCategorySlug = formatCategorySlug(categorySlugFromUrl);
