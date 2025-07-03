@@ -62,11 +62,27 @@ export function LoginForm({ className, ...props }) {
         toast.dismiss();
 
         try {
-            const success = await login(data);
+            const result = await login(data);
 
-            if (success) {
+            if (result.success) {
                 reset();
-                toast.success("Login berhasil! Selamat datang.", { duration: 2000, position: "top-right" });
+                toast.success(
+                    (t) => (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap",
+                                width: "fit-content",
+                                maxWidth: "100%",
+                            }}
+                        >
+                            {result.message}
+                        </div>
+                    ),
+                    {
+                        duration: 2000,
+                        position: "top-right",
+                    }
+                );
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 router.push("/dashboard");
             }

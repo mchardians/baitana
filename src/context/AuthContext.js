@@ -149,24 +149,30 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify(credentials),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                const error = new Error(errorData.message || "Please check your email and password.");
-                error.errors = errorData.errors;
-                throw error;
-            }
-
             const result = await response.json();
-            const accessToken = result?.data?.auth?.access_token;
-            const expiresIn = result?.data?.auth?.expires_in;
-            if (!accessToken || !expiresIn) throw new Error("Token or expiry data not found.");
 
-            apiClient.setToken(accessToken, expiresIn);
-            setToken(accessToken);
-            setTokenExpiryTime(Date.now() + (expiresIn * 1000));
-            await fetchUser(accessToken);
+            if (response.ok && result.status === "success") {
+                const accessToken = result?.data?.auth?.access_token;
+                const expiresIn = result?.data?.auth?.expires_in;
+                if (!accessToken || !expiresIn) throw new Error("Token or expiry data not found.");
 
-            return true;
+                apiClient.setToken(accessToken, expiresIn);
+                setToken(accessToken);
+                setTokenExpiryTime(Date.now() + (expiresIn * 1000));
+                await fetchUser(accessToken);
+
+                return {
+                    success: true,
+                    message: result.message || null,
+                };
+            } else {
+                const errorMessage = result.message || "Please check your email and password.";
+                const error = new Error(errorMessage);
+                error.errors = result.errors;
+                setError(error);
+                toast.error(errorMessage);
+                return { success: false, message: errorMessage };
+            }
         } catch (err) {
             setError(err);
         } finally {
