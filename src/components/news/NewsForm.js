@@ -1,12 +1,15 @@
-// components/forms/NewsForm.jsx
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useHandleDisplayError } from "@/hooks/useHandleDisplayError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NewsSchema } from "@/schemas/news-schema";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormProvider } from "react-hook-form";
+import dynamic from 'next/dynamic';
 import Image from "next/image";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,24 +19,13 @@ import {
     AlertDialogHeader,
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload, X, ImageOff } from "lucide-react";
-import { ModalForm } from "@/components/ModalForm"; // ModalForm tidak diubah
-import { toast } from "sonner";
-
-import dynamic from 'next/dynamic';
+import { ModalForm } from "@/components/ModalForm";
 import { MultiSelect } from "@/components/MultiSelect";
-import { FormProvider } from "react-hook-form";
 
 const QuillEditorManual = dynamic(() => import('@/components/QuillEditorManual'), { ssr: false });
-
-function toTitleCase(str) {
-    if (!str) return '';
-    return str
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ');
-}
 
 const showMultipleErrorToasts = (errors, fieldLabels) => {
     Object.entries(errors).forEach(([field, error]) => {
@@ -85,43 +77,7 @@ export function NewsForm({
         reset
     } = form;
 
-    const handleDisplayError = useCallback((currentError) => {
-        if (!currentError) return;
-
-        let messageForAlertDialog = "Terjadi kesalahan. Silakan coba lagi.";
-        if (currentError.message) {
-            messageForAlertDialog = currentError.message;
-        }
-        setErrorMessage(messageForAlertDialog);
-        setErrorDialogOpen(true);
-
-        if (currentError.errors) {
-            if (typeof currentError.errors === 'object' && Object.keys(currentError.errors).length > 0) {
-                const firstErrorField = Object.keys(currentError.errors)[0];
-                if (firstErrorField) {
-                    setTimeout(() => {
-                        setFocus(firstErrorField);
-                    }, 100);
-                }
-                Object.entries(currentError.errors).forEach(([field, messages]) => {
-                    const messageText = Array.isArray(messages) ? messages.join(", ") : messages;
-                    toast.error(`${toTitleCase(field)}: ${messageText}`, {
-                        duration: 4000,
-                        position: "top-right",
-                        id: `error-${field}-${Date.now()}`,
-                        dismissible: true
-                    });
-                });
-            } else if (typeof currentError.errors === 'string') {
-                toast.error(currentError.errors, {
-                    duration: 4000,
-                    position: "top-right",
-                    id: `error-global-${Date.now()}`,
-                    dismissible: true
-                });
-            }
-        }
-    }, [setFocus]);
+    const handleDisplayError = useHandleDisplayError(setErrorMessage, setErrorDialogOpen, setFocus);
 
     useEffect(() => {
         if (isModalOpen) {

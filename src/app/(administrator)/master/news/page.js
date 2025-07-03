@@ -66,19 +66,19 @@ export default function DashboardNewsPage() {
                 <TabsList className="mb-4">
                     <TabsTrigger
                         value="published"
-                        className="data-[state=active]:bg-[#2C3E9E] data-[state=active]:text-white px-4 py-1.5 text-sm rounded-md transition-all"
+                        className="data-[state=active]:bg-[#2C3E9E] data-[state=active]:text-white px-4 py-1.5 text-sm rounded-md transition-all cursor-pointer"
                     >
                         Published
                     </TabsTrigger>
                     <TabsTrigger
                         value="drafted"
-                        className="data-[state=active]:bg-[#2C3E9E] data-[state=active]:text-white px-4 py-1.5 text-sm rounded-md transition-all"
+                        className="data-[state=active]:bg-[#2C3E9E] data-[state=active]:text-white px-4 py-1.5 text-sm rounded-md transition-all cursor-pointer"
                     >
                         Drafted
                     </TabsTrigger>
                     <TabsTrigger
                         value="archived"
-                        className="data-[state=active]:bg-[#2C3E9E] data-[state=active]:text-white px-4 py-1.5 text-sm rounded-md transition-all"
+                        className="data-[state=active]:bg-[#2C3E9E] data-[state=active]:text-white px-4 py-1.5 text-sm rounded-md transition-all cursor-pointer"
                     >
                         Archived
                     </TabsTrigger>
