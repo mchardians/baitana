@@ -46,7 +46,7 @@ export async function getFacilities() {
 
 export async function getNews() {
     try {
-        const res = await fetch(`${API_URL}/news/published`);
+        const res = await fetch(`${API_URL}/public/news`);
 
         if (!res.ok) {
             throw new Error(`Failed to fetch: ${res.status}`);
@@ -66,6 +66,33 @@ export async function getNews() {
             news: [],
             serverTime: null,
             message: "Failed to fetch news"
+        };
+    }
+}
+
+export async function getNewsBySlug(slug = "") {
+    try {
+        const encodeSlug = encodeURIComponent(slug);
+        const res = await fetch(`${API_URL}/public/news/${encodeSlug}`);
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch: ${res.status}`);
+        }
+
+        const result = await res.json();
+
+        if (result.status && result.data) {
+            return {
+                news: result.data.news || [],
+                message: result.message || null
+            };
+        }
+    } catch (error) {
+        console.error("Error fetching detail news:", error);
+        return {
+            news: [],
+            serverTime: null,
+            message: "Failed to fetch detail news"
         };
     }
 }

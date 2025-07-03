@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { toast } from "sonner"
-import {getNews, getPrayerTimes} from "@/lib/site-content";
-import { getFacilities } from "@/lib/site-content";
+import { getFacilities, getNews, getPrayerTimes} from "@/lib/site-content";
 
 export default function useSiteContent() {
     const [prayerTimes, setPrayerTimes] = useState([])

@@ -1,37 +1,58 @@
 "use client"
 
-import React from 'react'
-import { useMemo } from "react";
-import useSiteContent from "@/hooks/useSiteContent";
+import React from "react"
+import { toast } from "sonner"
+import { useEffect, useState } from "react";
+import { getNewsBySlug } from "@/lib/site-content";
 import Image from "next/image";
 import Link from "next/link";
 import NewsSection from "@/components/landing/news/NewsSection";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function NewsDetailPage({ params }) {
-    const { news, isLoading } = useSiteContent()
     const resolvedParams = React.use(params);
     const slug = resolvedParams.slug;
+    const [post, setPost] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const post = useMemo(() => {
-        if (news.length > 0 && slug) {
-            return news.find((item) => item.slug === slug);
-        }
-        return null;
-    }, [news, slug]);
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const result = await getNewsBySlug(slug);
+                if (result.news) {
+                    setPost(result.news);
+                } else {
+                    toast.error("News not found.");
+                    setPost(null);
+                }
+            } catch (err) {
+                console.error("Error fetching news:", err);
+                toast.error("Failed to load news.");
+                setPost(null);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    if (isLoading || !post) {
+        fetchData();
+    }, [slug]);
+
+    if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                {isLoading ? (
-                    <LoadingSpinner />
-                ) : (
-                    <p className="text-lg">Berita tidak ditemukan.</p>
-                )}
+                <LoadingSpinner />
             </div>
         );
     }
 
+    if (!post) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-lg">Berita tidak ditemukan.</p>
+            </div>
+        );
+    }
 
     return (
         <>
