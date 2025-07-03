@@ -1,4 +1,4 @@
-import {FormResetPassword} from "@/components/password/FormResetPassword";
+import {ResetPasswordForm} from "@/components/password/ResetPasswordForm";
 
 export default function PasswordReset() {
     return (
@@ -23,8 +23,8 @@ export default function PasswordReset() {
                 backgroundColor: 'var(--muted)',
             }}
         >
-            <div className="flex w-full max-w-sm md:max-w-lg justify-center">
-                <FormResetPassword title={"Password Reset!"} description={"Enter your email and new password to reset."} />
+            <div className="flex w-full max-w-sm md:max-w-md justify-center">
+                <ResetPasswordForm title={"Password Reset!"} description={"Enter your email and new password to reset."} />
             </div>
         </div>
     )

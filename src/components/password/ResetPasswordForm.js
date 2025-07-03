@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {Eye, EyeOff, Loader2} from "lucide-react";
 
-export function FormResetPassword({
+export function ResetPasswordForm({
     className,
     ...props
 }) {
@@ -60,7 +60,7 @@ export function FormResetPassword({
     } = useForm({
         resolver: zodResolver(resetPasswordSchema),
         defaultValues: {
-            email: "",
+            email: emailFromQuery || "",
             password: "",
             password_confirmation: "",
         }
@@ -101,8 +101,8 @@ export function FormResetPassword({
         <div className="flex flex-col gap-6 w-full" {...props}>
             <Card className="overflow-hidden p-0">
                 <CardContent className="p-0">
-                    <div className="p-6 md:py-14 md:px-8">
-                        <div className="flex flex-col gap-14">
+                    <div className="p-6 md:py-12 md:px-8">
+                        <div className="flex flex-col gap-12">
                             <div className="flex flex-col items-center text-center">
                                 <h1 className="text-2xl font-bold">{props.title}</h1>
                                 <p className="text-muted-foreground text-balance">
