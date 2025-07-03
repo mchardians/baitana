@@ -86,12 +86,27 @@ export function RegisterForm({
         toast.dismiss();
 
         try {
-            const success = await register(dataToRegister);
+            const result = await register(dataToRegister);
 
-            if (success) {
+            if (result.success) {
                 reset();
-                toast.success("Registrasi berhasil! Silakan login untuk masuk ke sistem.", { duration: 2000, position: "top-right" });
-                await new Promise((resolve) => setTimeout(resolve, 1500));
+                toast.success(
+                    (t) => (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap",
+                                width: "fit-content",
+                                maxWidth: "100%",
+                            }}
+                        >
+                            {result.message}
+                        </div>
+                    ),
+                    {
+                        duration: 3000,
+                        position: "top-right",
+                    }
+                );
                 router.push("/auth/login?register_success=true");
             }
         } catch (err) {

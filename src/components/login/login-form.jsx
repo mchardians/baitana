@@ -79,7 +79,7 @@ export function LoginForm({ className, ...props }) {
                         </div>
                     ),
                     {
-                        duration: 2000,
+                        duration: 3000,
                         position: "top-right",
                     }
                 );

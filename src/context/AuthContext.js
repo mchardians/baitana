@@ -23,16 +23,35 @@ export const AuthProvider = ({ children }) => {
         try {
             const accessToken = apiClient.getToken();
             if (accessToken) {
-                await fetch(`${BASE_URL}/auth/logout`, {
+                const response = await fetch(`${BASE_URL}/auth/logout`, {
                     method: "POST",
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json"
                     }
                 });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    toast.success(result.message || "You have been logged out successfully.", {
+                        duration: 3000,
+                        position: "top-right",
+                    });
+                } else {
+                    const errorMessage = result.message || "Logout failed. Please try again.";
+                    toast.error(errorMessage, {
+                        duration: 3000,
+                        position: "top-right",
+                    });
+                }
             }
         } catch (err) {
             console.error("Logout API call failed:", err.message);
+            toast.error("An error occurred while logging out.", {
+                duration: 2000,
+                position: "top-right",
+            });
         } finally {
             apiClient.removeToken();
 
@@ -40,7 +59,9 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setTokenExpiryTime(0);
             setAuthLoading(false);
-            if (typeof window !== 'undefined') router.push('/auth/login?logout_success=true');
+            if (typeof window !== 'undefined') {
+                router.push('/auth/login?logout_success=true');
+            }
         }
     }, [router]);
 
@@ -190,20 +211,21 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify(dataUser),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                const error = new Error(errorData.message || "Gagal melakukan registrasi. Silakan coba lagi.");
-                error.errors = errorData.errors;
-                throw error;
-            }
-
             const result = await response.json();
 
-            toast.success(result.message)
-
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            return true;
+            if (response.ok && result.status === "success") {
+                return {
+                    success: true,
+                    message: result.message || null,
+                };
+            } else {
+                const errorMessage = result.message || "Registration failed. Please check your input and try again.";
+                const error = new Error(errorMessage);
+                error.errors = result.errors;
+                setError(error);
+                toast.error(errorMessage);
+                return { success: false, message: errorMessage };
+            }
         } catch (err) {
             setError(err);
         } finally {
