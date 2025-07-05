@@ -25,7 +25,7 @@ import {
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export function LoginForm({ className, ...props }) {
-    const { login, authLoading, error } = useAuth();
+    const { user, login, authLoading, error } = useAuth();
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [logoutMessageDialogOpen, setLogoutMessageDialogOpen] = useState(false);
@@ -84,7 +84,14 @@ export function LoginForm({ className, ...props }) {
                     }
                 );
                 await new Promise((resolve) => setTimeout(resolve, 1000));
-                router.push("/dashboard");
+
+                if (result?.user?.role) {
+                    if (result.user.role.name === 'jamaah-umum') {
+                        router.push("/");
+                    } else {
+                        router.push("/dashboard");
+                    }
+                }
             }
         } catch (err) {
             setErrorMessage(err.message || "Terjadi kesalahan jaringan atau tak terduga.");

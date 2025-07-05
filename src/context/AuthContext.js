@@ -184,6 +184,7 @@ export const AuthProvider = ({ children }) => {
 
                 return {
                     success: true,
+                    user: result.data.user || null,
                     message: result.message || null,
                 };
             } else {

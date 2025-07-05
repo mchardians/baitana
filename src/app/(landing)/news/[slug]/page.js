@@ -2,14 +2,22 @@
 
 import React from "react"
 import { toast } from "sonner"
+import apiClient from "@/lib/apiClient";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { getNewsBySlug } from "@/lib/site-content";
 import Image from "next/image";
 import Link from "next/link";
 import NewsSection from "@/components/landing/news/NewsSection";
+import CommentSection from "@/components/landing/comments/CommentSection";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function NewsDetailPage({ params }) {
+    const { user, token } = useAuth();
+
+    const currentUserId = user?.id;
+    const isLoggedIn = !!token;
+
     const resolvedParams = React.use(params);
     const slug = resolvedParams.slug;
     const [post, setPost] = useState(null);
@@ -36,7 +44,9 @@ export default function NewsDetailPage({ params }) {
         };
 
         fetchData();
-    }, [slug]);
+        console.log(currentUserId);
+        console.log(isLoggedIn);
+    }, [slug, currentUserId, isLoggedIn]);
 
     if (isLoading) {
         return (
@@ -100,6 +110,7 @@ export default function NewsDetailPage({ params }) {
                     )}
                 </div>
             </div>
+            <CommentSection newsDetail={post} currentUserId={currentUserId} isLoggedIn={isLoggedIn} />
             <NewsSection currentSlug={slug} limit={3} />
         </>
     );

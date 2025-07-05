@@ -1,177 +1,3 @@
-// "use client"
-//
-// import {
-//     LayoutDashboardIcon,
-//     SquareTerminal,
-//     BookOpen,
-//     Settings2,
-//     PieChart
-// } from "lucide-react";
-//
-// import { NavMain } from "@/components/nav-main"
-// import { NavUser } from "@/components/nav-user"
-//
-// import {
-//     Sidebar,
-//     SidebarContent,
-//     SidebarFooter,
-//     SidebarHeader, SidebarMenu, SidebarMenuItem,
-//     SidebarRail,
-// } from "@/components/ui/sidebar"
-// import {useAuth} from "@/context/AuthContext";
-// import Image from "next/image";
-//
-// const data = {
-//     navGroups: [
-//         {
-//             label: "Dashboard",
-//             items: [
-//                 {
-//                     title: "Dashboard",
-//                     url: "/dashboard",
-//                     icon: LayoutDashboardIcon,
-//                 },
-//             ],
-//         },
-//         {
-//             label: "Master Data",
-//             items: [
-//                 {
-//                     title: "Master Data",
-//                     url: "#",
-//                     icon: SquareTerminal,
-//                     isActive: true,
-//                     subItems: [
-//                         {
-//                             title: "Fasilitas",
-//                             url: "/master/facilities",
-//                         },
-//                         {
-//                             title: "Kategori Berita",
-//                             url: "/master/news/categories",
-//                         },
-//                         {
-//                             title: "Kategori Keuangan",
-//                             url: "/master/finance/categories",
-//                         },
-//                         {
-//                             title: "Role",
-//                             url: "/master/roles",
-//                         },
-//                         {
-//                             title: "User",
-//                             url: "/master/users",
-//                         },
-//                     ],
-//                 },
-//             ],
-//         },
-//         {
-//             label: "Transaksi Keuangan",
-//             items: [
-//                 {
-//                     title: "Transaksi Keuangan",
-//                     url: "#",
-//                     icon: SquareTerminal,
-//                     subItems: [
-//                         {
-//                             title: "Keuangan Masuk",
-//                             url: "/finance/transaction/incomes",
-//                         },
-//                         {
-//                             title: "Keuangan Keluar",
-//                             url: "/finance/transaction/expenses",
-//                         },
-//                         {
-//                             title: "Rekapitulasi Keuangan",
-//                             url: "/finance/recapitulations",
-//                         },
-//                     ],
-//                 },
-//             ],
-//         },
-//         {
-//             label: "Jadwal dan Acara",
-//             items: [
-//                 {
-//                     title: "Jadwal dan Acara",
-//                     url: "/events/schedule",
-//                     icon: BookOpen,
-//                 },
-//             ],
-//         },
-//         {
-//             label: "Berita",
-//             items: [
-//                 {
-//                     title: "Berita",
-//                     url: "/master/news",
-//                     icon: Settings2,
-//                 },
-//             ],
-//         },
-//         {
-//             label: "Laporan",
-//             items: [
-//                 {
-//                     title: "Laporan",
-//                     url: "/reports",
-//                     icon: PieChart,
-//                 },
-//             ],
-//         },
-//     ],
-// };
-//
-//
-// export function AppSidebar({
-//     ...props
-// }) {
-//     const { user, authLoading } = useAuth();
-//
-//     return (
-//         <Sidebar
-//             collapsible="icon"
-//             {...props}
-//             className="bg-gradient-to-b from-[#2C3E9E] via-[#2C3E9E] to-[#1e2b6b] shadow-xl"
-//         >
-//             <SidebarHeader className="bg-gradient-to-r from-[#2C3E9E] to-[#3d4fb8] border-b border-blue-200/20">
-//                 <SidebarMenu>
-//                     <SidebarMenuItem>
-//                         <div className="flex justify-center items-center rounded-xl p-2 bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg hover:bg-white/15 transition-all duration-300">
-//                             <img
-//                                 src="/images/logo-baitana-temp-white.png"
-//                                 alt="Logo Baitana"
-//                                 width={80}
-//                                 height={80}
-//                                 className="w-40 md:w-48 h-auto drop-shadow-sm"
-//                             />
-//                         </div>
-//                     </SidebarMenuItem>
-//                 </SidebarMenu>
-//             </SidebarHeader>
-//             <SidebarContent className="gap-0 bg-gradient-to-b from-[#2C3E9E] via-[#2C3E9E] to-[#1e2b6b] scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent p-0">
-//                 <NavMain data={data}/>
-//             </SidebarContent>
-//             <SidebarFooter className="bg-gradient-to-r from-[#1e2b6b] to-[#2C3E9E] border-t border-blue-200/20">
-//                 {!authLoading && user ? (
-//                     <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 shadow-md">
-//                         <NavUser user={user}/>
-//                     </div>
-//                 ) : (
-//                     <div className="h-16 flex items-center justify-center text-white/70 bg-white/5 rounded-lg border border-white/10">
-//                         <div className="flex items-center space-x-2">
-//                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-//                             <span className="text-sm font-medium">Loading user...</span>
-//                         </div>
-//                     </div>
-//                 )}
-//             </SidebarFooter>
-//             <SidebarRail className="bg-blue-300/20" />
-//         </Sidebar>
-//     );
-// }
-
 "use client"
 
 import { useCallback, useMemo } from "react";
@@ -196,9 +22,9 @@ import {
 import {useAuth} from "@/context/AuthContext";
 
 const ROLES = {
-    ADMIN: "Administrator",
-    BENDAHARA: "Bendahara",
-    SEKRETARIS: "Sekretaris",
+    ADMIN: "administrator",
+    BENDAHARA: "bendahara",
+    SEKRETARIS: "sekretaris",
 };
 
 const data = {
@@ -325,7 +151,7 @@ export function AppSidebar({
             return { navGroups: [] };
         }
 
-        const userRoleName = user.role?.name;
+        const userRoleName = user.role?.name?.toLowerCase().trim()
         if (!userRoleName) {
             return { navGroups: [] };
         }
