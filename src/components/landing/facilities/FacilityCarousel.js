@@ -88,11 +88,19 @@ function FacilityCard({ facility }) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white flex items-end justify-between z-20">
-                    <div>
-                        <h3 className="text-xl font-bold mb-1">{facility?.name}</h3>
+                    <div className="flex-1 min-w-0">
+                        <h3 className="text-xl font-bold mb-1 truncate max-w-[200px]">{facility?.name}</h3>
                         <div className="flex items-center text-sm">
-                            <div className={`w-3 h-3 rounded-full mr-2 flex items-center justify-center ${facility?.isAvailable ? "bg-green-800" : "bg-red-800"}`}>
-                                <div className={`w-1.5 h-1.5 rounded-full ${facility?.isAvailable ? "bg-green-500" : "bg-red-500"}`}></div>
+                            <div
+                                className={`w-3 h-3 rounded-full mr-2 flex items-center justify-center ${
+                                    facility?.isAvailable ? "bg-green-800" : "bg-red-800"
+                                }`}
+                            >
+                                <div
+                                    className={`w-1.5 h-1.5 rounded-full ${
+                                        facility?.isAvailable ? "bg-green-500" : "bg-red-500"
+                                    }`}
+                                ></div>
                             </div>
                             <span>{facility?.isAvailable ? "Tersedia" : "Tidak Tersedia"}</span>
                         </div>

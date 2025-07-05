@@ -21,7 +21,7 @@ export async function getPrayerTimes() {
 
 export async function getFacilities() {
     try {
-        const res = await fetch(`${API_URL}/facilities`);
+        const res = await fetch(`${API_URL}/public/facilities`);
 
         if (!res.ok) {
             throw new Error(`Failed to fetch: ${res.status}`);

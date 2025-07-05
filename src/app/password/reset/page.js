@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import {ResetPasswordForm} from "@/components/password/ResetPasswordForm";
 
 export default function PasswordReset() {
@@ -24,7 +25,9 @@ export default function PasswordReset() {
             }}
         >
             <div className="flex w-full max-w-sm md:max-w-md justify-center">
-                <ResetPasswordForm title={"Password Reset!"} description={"Enter your email and new password to reset."} />
+                <Suspense fallback={<div>Loading...</div>}>
+                    <ResetPasswordForm title={"Password Reset!"} description={"Enter your email and new password to reset."} />
+                </Suspense>
             </div>
         </div>
     )
