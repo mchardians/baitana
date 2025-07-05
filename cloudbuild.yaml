@@ -10,7 +10,7 @@ steps:
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
-          --service-account=566492197793-compute@developer.gserviceaccount.com
+          --impersonate-service-account=566492197793-compute@developer.gserviceaccount.com \
           --command='
             set -ex
 
