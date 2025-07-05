@@ -10,7 +10,6 @@ steps:
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
-          --impersonate-service-account=566492197793-compute@developer.gserviceaccount.com \
           --command='
             set -ex
 
@@ -22,7 +21,7 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
-        
+
             npm install
             npm run build
 
