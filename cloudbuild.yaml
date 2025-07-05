@@ -4,45 +4,39 @@ steps:
     args:
       - '-c'
       - |
-        set -ex
-
         gcloud compute ssh baitana \
           --zone=asia-southeast2-a \
           --project=keen-airlock-461707-u8 \
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
-          --command="
+          --command='
             set -ex
 
             cd /var/www/baitana
 
             git config --global --add safe.directory /var/www/baitana
 
-            if [ -d .git ]; then
+            if [ -d ".git" ]; then
               git checkout dev || git checkout -b dev
               git pull origin dev
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
 
-            export NVM_DIR=\"/home/rafioosadani/.nvm\"
-            [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\"
+            # Gunakan node dan npm sistem (bukan dari nvm atau /opt/nodejs)
+            /usr/bin/node -v
+            /usr/bin/npm -v
 
-            nvm install 20
-            nvm use 20
+            /usr/bin/npm install
+            /usr/bin/npm run build
 
-            node -v
-            npm -v
-
-            npm install
-            npm run build
-
-            if pm2 list | grep -q \"baitana\"; then
+            if pm2 list | grep -q "baitana"; then
               pm2 stop baitana
               pm2 delete baitana
             fi
-            pm2 start npm --name \"baitana\" -- start
-          "
+
+            pm2 start /usr/bin/npm --name "baitana" -- start
+          '
 options:
   logging: CLOUD_LOGGING_ONLY
