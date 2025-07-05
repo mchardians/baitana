@@ -7,8 +7,7 @@ steps:
       - '--zone=asia-southeast2-a'
       - '--project=keen-airlock-461707-u8'
       - '--tunnel-through-iap'
-      - '--ssh-key-file=/dev/null'
-      - '--quiet'
+      - '--strict-host-key-checking=no'
       - '--command'
       - |
         set -ex
@@ -29,7 +28,7 @@ steps:
         npm run build
 
         # Hentikan PM2 process yang lama (jika ada) dan mulai yang baru
-        if pm2 list | grep -q "baitana"; then # Nama proses PM2 disesuaikan dengan baitana
+        if pm2 list | grep -q "baitana"; then
           pm2 stop baitana
           pm2 delete baitana
         fi
