@@ -24,7 +24,7 @@ steps:
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
 
-            # Pastikan /usr/bin/node dan npm terhubung
+            # Pastikan /usr/bin/node, npm, dan pm2 terhubung
             if ! command -v node >/dev/null; then
               sudo ln -sf /opt/nodejs/bin/node /usr/bin/node
             fi
@@ -33,8 +33,13 @@ steps:
               sudo ln -sf /opt/nodejs/bin/npm /usr/bin/npm
             fi
 
+            if ! command -v pm2 >/dev/null; then
+              sudo ln -sf /opt/nodejs/bin/pm2 /usr/bin/pm2
+            fi
+
             node -v
             npm -v
+            pm2 -v
 
             npm install
             npm run build
