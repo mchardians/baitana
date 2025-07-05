@@ -10,38 +10,20 @@ steps:
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
-          --impersonate-service-account=566492197793-compute@developer.gserviceaccount.com \
           --command='
             set -ex
 
-            # --- Perbarui Node.js di VM ---
-            # Instal NVM (Node Version Manager) jika belum ada
-            if [ ! -d "$HOME/.nvm" ]; then
-              echo "Installing NVM..."
-              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-              # Sumber NVM agar perintahnya tersedia di sesi ini
-              export NVM_DIR="$HOME/.nvm"
-              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-              [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-            else
-              # Jika NVM sudah ada, pastikan di-source ulang
-              export NVM_DIR="$HOME/.nvm"
-              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-              [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-            fi
+            # Set env vars
+            export HOME=/root
+            export PATH=/opt/nodejs/bin:$PATH
 
-            # Instal versi Node.js yang dibutuhkan (misal v20) dan gunakan
-            # Cek package.json atau error log untuk versi yang paling cocok
-            echo "Installing Node.js v20..."
-            nvm install 20
-            nvm use 20
-            nvm alias default 20 # Set v20 sebagai default untuk sesi mendatang
-
-            # --- Lanjutkan Deployment Aplikasi ---
+            # Navigate to project directory
             cd /var/www/baitana
-        
+
+            # Make Git directory safe
             git config --global --add safe.directory /var/www/baitana
 
+            # Clone or pull the latest from dev
             if [ -d ".git" ]; then
               git checkout dev || git checkout -b dev
               git pull origin dev
@@ -49,9 +31,11 @@ steps:
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
 
+            # Install dependencies and build
             npm install
             npm run build
 
+            # Restart app with PM2
             if pm2 list | grep -q "baitana"; then
               pm2 stop baitana
               pm2 delete baitana
