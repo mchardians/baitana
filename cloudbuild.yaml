@@ -1,4 +1,3 @@
-# cloudbuild.yaml
 steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
@@ -15,9 +14,8 @@ steps:
           --command='
             set -ex
 
-            # --- Instal Node.js v20 (atau versi yang dibutuhkan) di VM ---
             # Hapus versi Node.js lama jika ada konflik
-            sudo apt-get remove -y nodejs npm || true # '|| true' untuk mencegah error jika belum terinstal
+            sudo apt-get remove -y nodejs npm || true
 
             # Tambahkan NodeSource PPA untuk Node.js v20
             # Ini adalah cara standar untuk mendapatkan versi Node.js terbaru di Debian/Ubuntu
@@ -26,9 +24,9 @@ steps:
             # Instal Node.js dan npm
             sudo apt-get install -y nodejs
 
-            # --- Lanjutkan Deployment Aplikasi ---
-            cd /var/www/baitana # Pastikan kamu di direktori proyekmu
-        
+            # Lanjutkan Deployment Aplikasi
+            cd /var/www/baitana
+
             git config --global --add safe.directory /var/www/baitana
 
             if [ -d ".git" ]; then
@@ -37,7 +35,7 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
-
+        
             npm install
             npm run build
 
