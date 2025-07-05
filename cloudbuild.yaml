@@ -3,11 +3,12 @@ steps:
     args:
       - 'compute'
       - 'ssh'
-      - 'baitana' # Ganti dengan nama VM kamu
-      - '--zone=asia-southeast2-a' # Ganti dengan zona VM kamu (misal: asia-southeast2-a)
-      - '--project=keen-airlock-461707-u8' # Ganti dengan ID Project GCP kamu
+      - 'baitana'
+      - '--zone=asia-southeast2-a'
+      - '--project=keen-airlock-461707-u8'
       - '--tunnel-through-iap'
-      - '--ssh-key-file=/dev/null' # Menggunakan SSH Keys yang dikelola GCP untuk Service Account
+      - '--ssh-key-file=/dev/null'
+      - '--quiet'
       - '--command'
       - |
         set -ex
