@@ -1,0 +1,40 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'compute'
+      - 'ssh'
+      - 'baitana' # Ganti dengan nama VM kamu
+      - '--zone=asia-southeast2-a' # Ganti dengan zona VM kamu (misal: asia-southeast2-a)
+      - '--project=keen-airlock-461707-u8' # Ganti dengan ID Project GCP kamu
+      - '--tunnel-through-iap'
+      - '--ssh-key-file=/dev/null' # Menggunakan SSH Keys yang dikelola GCP untuk Service Account
+      - '--command'
+      - |
+        set -ex
+        cd /var/www/baitana
+
+        # Cek apakah repository sudah di-clone sebelumnya
+        if [ -d ".git" ]; then
+          echo "Repository sudah ada. Melakukan git pull dari branch dev..."
+          git checkout dev || git checkout -b dev # Pastikan di branch dev, atau buat jika belum ada
+          git pull origin dev # Tarik kode terbaru dari branch dev
+        else
+          echo "Repository belum ada. Melakukan git clone branch dev..."
+          git clone --branch dev https://github.com/mchardians/baitana.git . # Ganti dengan URL repo GitHub temanmu
+        fi
+
+        # Instal dependensi dan build aplikasi Next.js
+        npm install
+        npm run build
+
+        # Hentikan PM2 process yang lama (jika ada) dan mulai yang baru
+        if pm2 list | grep -q "baitana"; then # Nama proses PM2 disesuaikan dengan baitana
+          pm2 stop baitana
+          pm2 delete baitana
+        fi
+        pm2 start npm --name "baitana" -- start # Menjalankan `npm start` (yang akan menjalankan `next start -p 3000`)
+
+        echo "Deployment Baitana selesai!"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
