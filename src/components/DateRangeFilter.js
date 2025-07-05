@@ -3,17 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 
 function useDebounce(value, delay) {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -44,9 +33,6 @@ export function DateRangeFilter({ onApplyFilter }) {
 
     const isClearingFilter = useRef(false);
 
-    const [isStartDatePickerOpen, setIsStartDatePickerOpen] = useState(false);
-    const [isEndDatePickerOpen, setIsEndDatePickerOpen] = useState(false);
-
     const debouncedStartDate = useDebounce(startDate, 500);
     const debouncedEndDate = useDebounce(endDate, 500);
 
@@ -57,33 +43,15 @@ export function DateRangeFilter({ onApplyFilter }) {
             return;
         }
 
-        // if (debouncedStartDate && debouncedEndDate) {
-        //     // Opsional: Validasi jika startDate harus <= endDate
-        //     if (debouncedStartDate > debouncedEndDate) {
-        //         console.warn("Tanggal mulai tidak boleh setelah tanggal selesai. Tidak auto-submit.");
-        //         return;
-        //     }
-        //
-        //     const formattedStartDate = format(debouncedStartDate, "yyyy-MM-dd");
-        //     const formattedEndDate = format(debouncedEndDate, "yyyy-MM-dd");
-        //
-        //     console.log("DateRangeFilter: Auto-submitting with:", { formattedStartDate, formattedEndDate });
-        //     onApplyFilter({
-        //         startDate: formattedStartDate,
-        //         endDate: formattedEndDate,
-        //     });
-        // }
-        // Jika hanya satu tanggal yang ada, atau keduanya undefined, tidak ada auto-submit
-        // Pengguna harus menekan "Apply Filter" secara manual
     }, [debouncedStartDate, debouncedEndDate, onApplyFilter]);
 
     // --- Logika Manual Submit ---
     const onSubmit = (data) => {
         const formattedStartDate = data.startDate
-            ? format(data.startDate, "yyyy-MM-dd")
+            ? format(data.startDate, "dd-MM-yyyy")
             : null;
         const formattedEndDate = data.endDate
-            ? format(data.endDate, "yyyy-MM-dd")
+            ? format(data.endDate, "dd-MM-yyyy")
             : null;
 
         // Validasi untuk manual submit
@@ -102,108 +70,167 @@ export function DateRangeFilter({ onApplyFilter }) {
         onApplyFilter({ startDate: null, endDate: null });
     };
 
+    // Helper function untuk convert date ke format input
+    const dateToInputValue = (date) => {
+        if (!date) return "";
+        return format(date, "yyyy-MM-dd");
+    };
+
+    // Helper function untuk convert input value ke date
+    const inputValueToDate = (value) => {
+        if (!value) return undefined;
+        return new Date(value);
+    };
+
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4 p-6 border rounded-xl bg-card text-card-foreground shadow-sm"
+            style={{
+                padding: '24px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '12px',
+                backgroundColor: '#ffffff',
+                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+                marginBottom: '16px'
+            }}
         >
-            <h3 className="text-lg font-semibold">Filter by Date Range</h3>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end">
-                {/* Start Date Picker */}
-                <div className="flex-1"> {/* Ubah w-1/3 ke flex-1 untuk responsivitas */}
-                    <Label htmlFor="startDate" className="mb-2 text-sm font-normal">Tanggal Mulai</Label>
+            <h3 style={{
+                fontSize: '18px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: '#1a202c'
+            }}>
+                Filter by Date Range
+            </h3>
+
+            <div style={{
+                display: 'flex',
+                gap: '16px',
+                marginBottom: '16px'
+            }}>
+                {/* Start Date */}
+                <div style={{ width: '50%' }}>
+                    <label style={{
+                        display: 'block',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        marginBottom: '8px',
+                        color: '#374151'
+                    }}>
+                        Tanggal Mulai
+                    </label>
                     <Controller
                         control={control}
                         name="startDate"
                         render={({ field }) => (
-                            <Popover
-                                open={isStartDatePickerOpen}
-                                onOpenChange={setIsStartDatePickerOpen}
-                            >
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                            !field.value && "text-muted-foreground"
-                                        )}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {field.value ? (
-                                            format(field.value, "PPP")
-                                        ) : (
-                                            <span>Pilih tanggal mulai</span>
-                                        )}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={(date) => {
-                                            field.onChange(date);
-                                            setIsStartDatePickerOpen(false); // Tutup popover
-                                        }}
-                                        initialFocus
-                                        toDate={endDate}
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                            <input
+                                type="date"
+                                value={dateToInputValue(field.value)}
+                                onChange={(e) => field.onChange(inputValueToDate(e.target.value))}
+                                max={endDate ? dateToInputValue(endDate) : undefined}
+                                style={{
+                                    width: '100%',
+                                    padding: '8px 12px',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    backgroundColor: '#ffffff',
+                                    color: '#374151',
+                                    height: '40px',
+                                    boxSizing: 'border-box'
+                                }}
+                            />
                         )}
                     />
                 </div>
 
-                {/* End Date Picker */}
-                <div className="flex-1"> {/* Ubah w-1/3 ke flex-1 untuk responsivitas */}
-                    <Label htmlFor="endDate" className="mb-2 text-sm font-normal">Tanggal Selesai</Label>
+                {/* End Date */}
+                <div style={{ width: '50%' }}>
+                    <label style={{
+                        display: 'block',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        marginBottom: '8px',
+                        color: '#374151'
+                    }}>
+                        Tanggal Selesai
+                    </label>
                     <Controller
                         control={control}
                         name="endDate"
                         render={({ field }) => (
-                            <Popover
-                                open={isEndDatePickerOpen}
-                                onOpenChange={setIsEndDatePickerOpen}
-                            >
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                            !field.value && "text-muted-foreground"
-                                        )}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {field.value ? (
-                                            format(field.value, "PPP")
-                                        ) : (
-                                            <span>Pilih tanggal selesai</span>
-                                        )}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={(date) => {
-                                            field.onChange(date);
-                                            setIsEndDatePickerOpen(false); // Tutup popover
-                                        }}
-                                        initialFocus
-                                        fromDate={startDate}
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                            <input
+                                type="date"
+                                value={dateToInputValue(field.value)}
+                                onChange={(e) => field.onChange(inputValueToDate(e.target.value))}
+                                min={startDate ? dateToInputValue(startDate) : undefined}
+                                style={{
+                                    width: '100%',
+                                    padding: '8px 12px',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    backgroundColor: '#ffffff',
+                                    color: '#374151',
+                                    height: '40px',
+                                    boxSizing: 'border-box'
+                                }}
+                            />
                         )}
                     />
                 </div>
-                <div className="flex-1 hidden md:block"></div> {/* Untuk alignment responsif */}
             </div>
 
-            <div className="flex gap-2 justify-start">
-                <Button type="button" variant="outline" className="cursor-pointer" onClick={handleClearFilter}>
+            <div style={{
+                display: 'flex',
+                gap: '8px',
+                flexWrap: 'wrap'
+            }}>
+                <button
+                    type="button"
+                    onClick={handleClearFilter}
+                    style={{
+                        padding: '8px 16px',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        backgroundColor: '#ffffff',
+                        color: '#374151',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = '#f9fafb';
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.backgroundColor = '#ffffff';
+                    }}
+                >
                     Clear Filter
-                </Button>
-                <Button type="submit" className="bg-[#2C3E9E] hover:bg-[#243280] cursor-pointer">Apply Filter</Button>
+                </button>
+                <button
+                    type="submit"
+                    style={{
+                        padding: '8px 16px',
+                        border: 'none',
+                        borderRadius: '6px',
+                        backgroundColor: '#2C3E9E',
+                        color: '#ffffff',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = '#243280';
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.backgroundColor = '#2C3E9E';
+                    }}
+                >
+                    Apply Filter
+                </button>
             </div>
         </form>
     );

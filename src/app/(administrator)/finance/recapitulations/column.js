@@ -30,10 +30,10 @@ export const createColumns = () => [
         size: 60,
     },
     {
-        accessorKey: "date",
+        accessorKey: "date_idn_format",
         header: () => <div className="px-2 font-semibold">Tanggal</div>,
         cell: ({ row }) => {
-            return <div className="font-medium text-gray-900">{row.getValue("date")}</div>
+            return <div className="font-medium text-gray-900">{row.getValue("date_idn_format")}</div>
         },
         size: 150,
     },

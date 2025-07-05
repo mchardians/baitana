@@ -13,6 +13,8 @@ export default function FinanceRecapitulationsPage() {
         isLoading,
         currentFilterDates,
         fetchFinanceRecapitulations,
+        handleExportExcel,
+        handleExportPdf,
         handleApplyDateFilter
     } = useFinanceRecapitulations();
 
@@ -37,6 +39,8 @@ export default function FinanceRecapitulationsPage() {
                 totalExpense={totalExpense}
                 isLoading={isLoading}
                 onDateRangeChange={handleApplyDateFilter}
+                onExportExcel={handleExportExcel}
+                onExportPdf={handleExportPdf}
             />
         </div>
     )

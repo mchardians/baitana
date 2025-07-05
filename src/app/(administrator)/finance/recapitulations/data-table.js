@@ -27,7 +27,7 @@ import {DataTablePagination} from "@/components/DataTablePagination";
 import {DateRangeFilter} from "@/components/DateRangeFilter";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
-export function DataTable({ columns, data, totalIncome, totalExpense, isLoading = false, onDateRangeChange}) {
+export function DataTable({ columns, data, totalIncome, totalExpense, isLoading = false, onDateRangeChange, onExportExcel, onExportPdf}) {
     const [sorting, setSorting] = React.useState([])
     const [columnFilters, setColumnFilters] = React.useState([])
     const [columnVisibility, setColumnVisibility] = React.useState({})
@@ -134,7 +134,7 @@ export function DataTable({ columns, data, totalIncome, totalExpense, isLoading 
                                                     checked={column.getIsVisible()}
                                                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                                                 >
-                                                    {column.id === "date"
+                                                    {column.id === "date_idn_format"
                                                         ? "Tanggal"
                                                         : column.id === "category"
                                                             ? "Kategori Keuangan"
@@ -152,11 +152,19 @@ export function DataTable({ columns, data, totalIncome, totalExpense, isLoading 
                             </DropdownMenu>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Button className="bg-green-600 hover:bg-green-500 h-10 px-4 font-medium cursor-pointer">
+                            <Button
+                                className="bg-green-600 hover:bg-green-500 h-10 px-4 font-medium cursor-pointer"
+                                onClick={onExportExcel}
+                                disabled={isLoading}
+                            >
                                 <FileCheck className="h-4 w-4" />
                                 Export Excel
                             </Button>
-                            <Button className="bg-red-600 hover:bg-red-500 h-10 px-4 font-medium cursor-pointer">
+                            <Button
+                                className="bg-red-600 hover:bg-red-500 h-10 px-4 font-medium cursor-pointer"
+                                onClick={onExportPdf}
+                                disabled={isLoading}
+                            >
                                 <FileDown className="h-4 w-4" />
                                 Export PDF
                             </Button>
