@@ -13,8 +13,11 @@ steps:
           --command='
             set -ex
 
+            export PATH=/opt/nodejs/bin:$PATH
+            export NODE_ENV=production
+
             cd /var/www/baitana
-        
+
             git config --global --add safe.directory /var/www/baitana
 
             if [ -d ".git" ]; then
@@ -23,6 +26,9 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
+
+            node -v
+            npm -v
 
             npm install
             npm run build
