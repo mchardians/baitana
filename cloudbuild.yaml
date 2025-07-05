@@ -4,7 +4,7 @@ steps:
     args:
       - '-c'
       - |
-        gcloud compute ssh baitana-web-vm \
+        gcloud compute ssh baitana \
           --zone=asia-southeast2-a \
           --project=keen-airlock-461707-u8 \
           --tunnel-through-iap \
