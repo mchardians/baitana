@@ -1,6 +1,7 @@
 import apiClient from "@/lib/apiClient";
 import API from "@/lib/api";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
 const NEWS_API = API.news || `${process.env.NEXT_PUBLIC_API_BASE_URL}/news`;
 
 export async function getComments(newsId = "") {

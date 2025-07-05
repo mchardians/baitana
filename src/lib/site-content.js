@@ -97,3 +97,24 @@ export async function getNewsBySlug(slug = "") {
     }
 }
 
+export async function getCommentsIndex(newsId = "") {
+    try {
+        const res = await fetch(`${API_URL}/public/news/${newsId}/comments`);
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch: ${res.status}`);
+        }
+
+        const result = await res.json();
+
+        return result.data?.comments || []
+    } catch (error) {
+        console.error("Error fetching news:", error);
+        return {
+            news: [],
+            serverTime: null,
+            message: "Failed to fetch news"
+        };
+    }
+}
+

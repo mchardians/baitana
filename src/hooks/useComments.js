@@ -2,19 +2,18 @@
 
 import {useCallback, useState} from "react";
 import { createComment, getComments } from "@/lib/comment";
+import { getCommentsIndex } from "@/lib/site-content";
 import { toast } from "sonner";
 
 export default function useComments(newsId = "") {
     const [comments, setComments] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    // const [isModalOpen, setIsModalOpen] = useState(false)
-    // const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false)
     const [selectedComment, setSelectedComment] = useState(null)
 
     const fetchComments = useCallback(async (newsId = "") => {
         setIsLoading(true)
         try {
-            const comments = await getComments(newsId)
+            const comments = await getCommentsIndex(newsId)
             setComments(comments)
         } catch (error) {
             toast.error("Gagal memuat data komentar")
