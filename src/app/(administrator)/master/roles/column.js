@@ -41,7 +41,7 @@ export const createColumns = (openEditModal, openDeleteAlert) => [
         size: 150,
     },
     {
-        accessorKey: "name",
+        accessorKey: "name_upper",
         header: ({ column }) => {
             return (
                 <Button
@@ -55,7 +55,7 @@ export const createColumns = (openEditModal, openDeleteAlert) => [
             )
         },
         cell: ({ row }) => {
-            return <div className="font-medium text-gray-900">{row.getValue("name")}</div>
+            return <div className="font-medium text-gray-900">{row.getValue("name_upper")}</div>
         },
         size: 600,
     },

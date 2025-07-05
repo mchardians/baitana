@@ -104,7 +104,7 @@ export function DataTable({ columns, data, isLoading = false, onAddNew }) {
                                             >
                                                 {column.id === "role_code"
                                                     ? "Kode Role"
-                                                    : column.id === "name"
+                                                    : column.id === "name_upper"
                                                         ? "Nama Role"
                                                         : column.id === "created_at"
                                                             ? "Tanggal Dibuat"
