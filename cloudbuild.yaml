@@ -1,3 +1,4 @@
+# cloudbuild.yaml
 steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
@@ -14,29 +15,20 @@ steps:
           --command='
             set -ex
 
-            # --- Konfigurasi Node.js dengan NVM di VM ---
-            # Definisikan direktori instalasi NVM di lokasi yang bisa diakses
-            export NVM_DIR="/usr/local/nvm" # Menggunakan /usr/local/nvm atau /opt/nvm bisa jadi pilihan
-            mkdir -p $NVM_DIR # Pastikan direktori ada
+            # --- Instal Node.js v20 (atau versi yang dibutuhkan) di VM ---
+            # Hapus versi Node.js lama jika ada konflik
+            sudo apt-get remove -y nodejs npm || true # '|| true' untuk mencegah error jika belum terinstal
 
-            # Instal NVM jika belum ada (gunakan lokasi kustom)
-            if [ ! -f "$NVM_DIR/nvm.sh" ]; then
-              echo "Installing NVM to $NVM_DIR..."
-              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR=$NVM_DIR bash
-            fi
-
-            # Sumber NVM agar perintahnya tersedia di sesi ini
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-            # Instal versi Node.js yang dibutuhkan (misal v20) dan gunakan
-            echo "Installing Node.js v20..."
-            nvm install 20
-            nvm use 20
-            nvm alias default 20 # Set v20 sebagai default untuk sesi mendatang
+            # Tambahkan NodeSource PPA untuk Node.js v20
+            # Ini adalah cara standar untuk mendapatkan versi Node.js terbaru di Debian/Ubuntu
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+        
+            # Instal Node.js dan npm
+            sudo apt-get install -y nodejs
 
             # --- Lanjutkan Deployment Aplikasi ---
             cd /var/www/baitana # Pastikan kamu di direktori proyekmu
-
+        
             git config --global --add safe.directory /var/www/baitana
 
             if [ -d ".git" ]; then
@@ -45,8 +37,7 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
-        
-            # Setelah nvm use 20, npm install akan menggunakan Node.js v20
+
             npm install
             npm run build
 
