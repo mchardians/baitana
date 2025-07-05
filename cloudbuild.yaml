@@ -4,6 +4,9 @@ steps:
     args:
       - '-c'
       - |
+        set -ex
+
+        # Masuk ke VM via SSH dan jalankan semua perintah di dalamnya
         gcloud compute ssh baitana \
           --zone=asia-southeast2-a \
           --project=keen-airlock-461707-u8 \
@@ -15,8 +18,10 @@ steps:
 
             cd /var/www/baitana
 
+            # Konfig git aman
             git config --global --add safe.directory /var/www/baitana
 
+            # Tarik source dari GitHub
             if [ -d ".git" ]; then
               git checkout dev || git checkout -b dev
               git pull origin dev
@@ -24,14 +29,29 @@ steps:
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
 
+            # Aktifkan NVM
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # Install Node 20 jika belum ada
+            nvm install 20
+            nvm use 20
+
+            # Konfirmasi versi
+            node -v
+            npm -v
+
+            # Install dependency dan build
             npm install
             npm run build
 
+            # Jalankan ulang PM2
             if pm2 list | grep -q "baitana"; then
               pm2 stop baitana
               pm2 delete baitana
             fi
             pm2 start npm --name "baitana" -- start
           '
+
 options:
   logging: CLOUD_LOGGING_ONLY
