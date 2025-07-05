@@ -13,10 +13,8 @@ steps:
           --command='
             set -ex
 
-            export PATH="/home/rafioosadani/.nvm/versions/node/v23.10.0/bin:$PATH"
-
             cd /var/www/baitana
-
+        
             git config --global --add safe.directory /var/www/baitana
 
             if [ -d ".git" ]; then
@@ -25,9 +23,6 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
-
-            echo "Node version: $(node -v)"
-            echo "NPM version: $(npm -v)"
 
             npm install
             npm run build
