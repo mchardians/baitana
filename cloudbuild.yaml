@@ -13,8 +13,8 @@ steps:
           --command='
             set -ex
 
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            export NVM_DIR="${HOME}/.nvm"
+            [ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh"
 
             cd /var/www/baitana
 
@@ -24,6 +24,9 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
+
+            node -v
+            npm -v
 
             npm install
             npm run build
