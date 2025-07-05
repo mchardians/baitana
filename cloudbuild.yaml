@@ -10,14 +10,36 @@ steps:
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
+          --impersonate-service-account=566492197793-compute@developer.gserviceaccount.com \
           --command='
             set -ex
 
-            export PATH=/opt/nodejs/bin:$PATH
-            export NODE_ENV=production
+            # --- Perbarui Node.js di VM ---
+            # Instal NVM (Node Version Manager) jika belum ada
+            if [ ! -d "$HOME/.nvm" ]; then
+              echo "Installing NVM..."
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+              # Sumber NVM agar perintahnya tersedia di sesi ini
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+              [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+            else
+              # Jika NVM sudah ada, pastikan di-source ulang
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+              [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+            fi
 
+            # Instal versi Node.js yang dibutuhkan (misal v20) dan gunakan
+            # Cek package.json atau error log untuk versi yang paling cocok
+            echo "Installing Node.js v20..."
+            nvm install 20
+            nvm use 20
+            nvm alias default 20 # Set v20 sebagai default untuk sesi mendatang
+
+            # --- Lanjutkan Deployment Aplikasi ---
             cd /var/www/baitana
-
+        
             git config --global --add safe.directory /var/www/baitana
 
             if [ -d ".git" ]; then
@@ -26,9 +48,6 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
-
-            node -v
-            npm -v
 
             npm install
             npm run build
