@@ -10,7 +10,6 @@ steps:
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
-          -y \
           --command='
             set -ex
 
