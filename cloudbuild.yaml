@@ -1,40 +1,36 @@
 steps:
   - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
     args:
-      - 'compute'
-      - 'ssh'
-      - 'baitana'
-      - '--zone=asia-southeast2-a'
-      - '--project=keen-airlock-461707-u8'
-      - '--tunnel-through-iap'
-      - '--strict-host-key-checking=no'
-      - '--command'
+      - '-c'
       - |
-        set -ex
-        cd /var/www/baitana
+        gcloud compute ssh baitana-web-vm \
+          --zone=asia-southeast2-a \
+          --project=keen-airlock-461707-u8 \
+          --tunnel-through-iap \
+          --strict-host-key-checking=no \
+          --quiet \
+          -y \
+          --command='
+            set -ex
 
-        # Cek apakah repository sudah di-clone sebelumnya
-        if [ -d ".git" ]; then
-          echo "Repository sudah ada. Melakukan git pull dari branch dev..."
-          git checkout dev || git checkout -b dev # Pastikan di branch dev, atau buat jika belum ada
-          git pull origin dev # Tarik kode terbaru dari branch dev
-        else
-          echo "Repository belum ada. Melakukan git clone branch dev..."
-          git clone --branch dev https://github.com/mchardians/baitana.git . # Ganti dengan URL repo GitHub temanmu
-        fi
+            cd /var/www/baitana
 
-        # Instal dependensi dan build aplikasi Next.js
-        npm install
-        npm run build
+            if [ -d ".git" ]; then
+              git checkout dev || git checkout -b dev
+              git pull origin dev
+            else
+              git clone --branch dev https://github.com/mchardians/baitana.git .
+            fi
+        
+            npm install
+            npm run build
 
-        # Hentikan PM2 process yang lama (jika ada) dan mulai yang baru
-        if pm2 list | grep -q "baitana"; then
-          pm2 stop baitana
-          pm2 delete baitana
-        fi
-        pm2 start npm --name "baitana" -- start # Menjalankan `npm start` (yang akan menjalankan `next start -p 3000`)
-
-        echo "Deployment Baitana selesai!"
-
+            if pm2 list | grep -q "baitana"; then
+              pm2 stop baitana
+              pm2 delete baitana
+            fi
+            pm2 start npm --name "baitana" -- start
+          '
 options:
   logging: CLOUD_LOGGING_ONLY
