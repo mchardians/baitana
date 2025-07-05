@@ -24,19 +24,19 @@ steps:
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
 
-            # Gunakan node dan npm sistem (bukan dari nvm atau /opt/nodejs)
-            /usr/bin/node -v
-            /usr/bin/npm -v
+            # Gunakan node/npm dengan path lengkap
+            /opt/nodejs/bin/node -v
+            /opt/nodejs/bin/npm -v
 
-            /usr/bin/npm install
-            /usr/bin/npm run build
+            /opt/nodejs/bin/npm install
+            /opt/nodejs/bin/npm run build
 
             if pm2 list | grep -q "baitana"; then
               pm2 stop baitana
               pm2 delete baitana
             fi
 
-            pm2 start /usr/bin/npm --name "baitana" -- start
+            pm2 start /opt/nodejs/bin/npm --name "baitana" -- start
           '
 options:
   logging: CLOUD_LOGGING_ONLY
