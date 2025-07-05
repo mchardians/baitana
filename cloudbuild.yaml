@@ -10,21 +10,13 @@ steps:
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
-          --impersonate-service-account=566492197793-compute@developer.gserviceaccount.com \
           --command='
             set -ex
 
-            # Hapus versi Node.js lama jika ada konflik
-            sudo apt-get remove -y nodejs npm || true
+            export NVM_DIR="/root/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm use 20
 
-            # Tambahkan NodeSource PPA untuk Node.js v20
-            # Ini adalah cara standar untuk mendapatkan versi Node.js terbaru di Debian/Ubuntu
-            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-        
-            # Instal Node.js dan npm
-            sudo apt-get install -y nodejs
-
-            # Lanjutkan Deployment Aplikasi
             cd /var/www/baitana
 
             git config --global --add safe.directory /var/www/baitana
@@ -35,7 +27,7 @@ steps:
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
-        
+
             npm install
             npm run build
 
