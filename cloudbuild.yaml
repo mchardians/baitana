@@ -14,6 +14,8 @@ steps:
             set -ex
 
             cd /var/www/baitana
+        
+            git config --global --add safe.directory /var/www/baitana
 
             if [ -d ".git" ]; then
               git checkout dev || git checkout -b dev
