@@ -10,32 +10,46 @@ steps:
           --tunnel-through-iap \
           --strict-host-key-checking=no \
           --quiet \
+          --impersonate-service-account=566492197793-compute@developer.gserviceaccount.com \
           --command='
             set -ex
 
-            # Set env vars
-            export HOME=/root
-            export PATH=/opt/nodejs/bin:$PATH
+            # --- Konfigurasi Node.js dengan NVM di VM ---
+            # Definisikan direktori instalasi NVM di lokasi yang bisa diakses
+            export NVM_DIR="/usr/local/nvm" # Menggunakan /usr/local/nvm atau /opt/nvm bisa jadi pilihan
+            mkdir -p $NVM_DIR # Pastikan direktori ada
 
-            # Navigate to project directory
-            cd /var/www/baitana
+            # Instal NVM jika belum ada (gunakan lokasi kustom)
+            if [ ! -f "$NVM_DIR/nvm.sh" ]; then
+              echo "Installing NVM to $NVM_DIR..."
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR=$NVM_DIR bash
+            fi
 
-            # Make Git directory safe
+            # Sumber NVM agar perintahnya tersedia di sesi ini
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # Instal versi Node.js yang dibutuhkan (misal v20) dan gunakan
+            echo "Installing Node.js v20..."
+            nvm install 20
+            nvm use 20
+            nvm alias default 20 # Set v20 sebagai default untuk sesi mendatang
+
+            # --- Lanjutkan Deployment Aplikasi ---
+            cd /var/www/baitana # Pastikan kamu di direktori proyekmu
+
             git config --global --add safe.directory /var/www/baitana
 
-            # Clone or pull the latest from dev
             if [ -d ".git" ]; then
               git checkout dev || git checkout -b dev
               git pull origin dev
             else
               git clone --branch dev https://github.com/mchardians/baitana.git .
             fi
-
-            # Install dependencies and build
+        
+            # Setelah nvm use 20, npm install akan menggunakan Node.js v20
             npm install
             npm run build
 
-            # Restart app with PM2
             if pm2 list | grep -q "baitana"; then
               pm2 stop baitana
               pm2 delete baitana
