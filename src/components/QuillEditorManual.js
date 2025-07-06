@@ -333,7 +333,7 @@ function QuillEditorManual({ value, onChange, readOnly = false, placeholder = ''
                 }
             }
         };
-    }, [debouncedOnChange, placeholder, readOnly, value]);
+    }, []);
 
 
     // --- EFFECT 2: UPDATE KONTEN DARI PROP 'VALUE' ---
