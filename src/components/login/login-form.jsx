@@ -85,12 +85,14 @@ export function LoginForm({ className, ...props }) {
                 );
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
-                if (result?.user?.role) {
-                    if (result.user.role.name === 'jamaah-umum') {
-                        router.push("/");
-                    } else {
-                        router.push("/dashboard");
-                    }
+                // ✅ Fix akses ke user role
+                const roleName = result.user?.role?.name;
+                console.log("🎯 Redirecting based on role:", roleName); // Debug 5
+
+                if (roleName === "jamaah-umum") {
+                    router.push("/");
+                } else {
+                    router.push("/dashboard");
                 }
             }
         } catch (err) {

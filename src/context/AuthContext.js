@@ -172,15 +172,29 @@ export const AuthProvider = ({ children }) => {
 
             const result = await response.json();
 
+            console.log("🔑 Login response result:", result); // Debug 1
+
             if (response.ok && result.status === "success") {
                 const accessToken = result?.data?.auth?.access_token;
                 const expiresIn = result?.data?.auth?.expires_in;
+                console.log("✅ Access Token:", accessToken); // Debug 2
+                console.log("⏳ Expired In (seconds):", expiresIn); // Debug 3
+
                 if (!accessToken || !expiresIn) throw new Error("Token or expiry data not found.");
 
                 apiClient.setToken(accessToken, expiresIn);
                 setToken(accessToken);
                 setTokenExpiryTime(Date.now() + (expiresIn * 1000));
-                await fetchUser(accessToken);
+
+                await fetchUser(accessToken); // Fetch user for context
+
+                const finalUser = result.data.user || null;
+
+                console.log("🎉 Login success, return result:", {
+                    success: true,
+                    user: finalUser,
+                    message: result.message,
+                });
 
                 return {
                     success: true,
