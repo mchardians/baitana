@@ -22,7 +22,7 @@ export default function useNews(activeTab = "published") {
         try {
             let newsData;
             if (status) {
-                newsData = await getNewsByParam("status", status);
+                newsData = await getNewsByParam({ "status[eq]": status });
             } else {
                 newsData = await getNews();
             }

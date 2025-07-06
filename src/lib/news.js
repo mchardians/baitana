@@ -16,10 +16,15 @@ export async function getNews() {
     }
 }
 
-export async function getNewsByParam(param = "status", value = "") {
+export async function getNewsByParam(params = {}) {
     try {
-        const query = `${encodeURIComponent(param)}=${encodeURIComponent(value)}`;
-        const url = `${NEWS_API}?${query}`;
+        const queryParams = new URLSearchParams();
+
+        for (const [key, value] of Object.entries(params)) {
+            queryParams.append(key, value);
+        }
+
+        const url = `${NEWS_API}?${queryParams.toString()}`;
 
         const result = await apiClient.makeRequest(url, {
             method: "GET",
