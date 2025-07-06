@@ -83,11 +83,10 @@ export function LoginForm({ className, ...props }) {
                         position: "top-right",
                     }
                 );
-                await new Promise((resolve) => setTimeout(resolve, 1000));
 
-                // ✅ Fix akses ke user role
+                // await new Promise((resolve) => setTimeout(resolve, 1000));
+
                 const roleName = result.user?.role?.name;
-                console.log("🎯 Redirecting based on role:", roleName); // Debug 5
 
                 if (roleName === "jamaah-umum") {
                     router.push("/");

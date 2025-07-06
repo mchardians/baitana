@@ -35,7 +35,7 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
             const facility = row.original
             return (
                 <div className="space-y-1">
-                    <div className="font-medium text-gray-900">{facility?.name_upper}</div>
+                    <div className="font-medium text-gray-900 text-xs text-justify w-[200px] max-w-[200px] whitespace-normal break-words">{facility?.name_upper}</div>
                     <Badge variant="outline" className="bg-blue-50 text-[#2C3E9E] border-[#2C3E9E]/30 text-[11px] px-1">
                         {facility?.facility_code}
                     </Badge>
@@ -101,13 +101,12 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
             const facility = row.original
             const statusValue = facility.status
             const displayStatus = statusValue.charAt(0).toUpperCase() + statusValue.slice(1);
-
             let badgeClass = ""
-            if (statusValue === "available") {
+            if (statusValue === "reservable") {
                 badgeClass = "bg-green-50 text-green-700 border-green-200"
-            } else if (statusValue === "maintenance") {
-                badgeClass = "bg-yellow-50 text-yellow-700 border-yellow-200"
-            } else if (statusValue === "unavailable") {
+            } else if (statusValue === "reserved") {
+                badgeClass = "bg-blue-50 text-blue-700 border-blue-200"
+            } else if (statusValue === "unreservable") {
                 badgeClass = "bg-red-50 text-red-700 border-red-200"
             } else {
                 badgeClass = "bg-gray-50 text-gray-700 border-gray-200"
@@ -115,7 +114,7 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
 
             return (
                 <div className="flex justify-center">
-                    <Badge variant="outline" className={`${badgeClass} text-xs font-medium px-3 py-1`}>
+                    <Badge variant="outline" className={`${badgeClass} text-[11px] font-medium px-2 py-1`}>
                         { displayStatus || "No Status"}
                     </Badge>
                 </div>
@@ -171,7 +170,7 @@ export const createColumns = (openEditModal, openDeleteAlert, openPreviewImagesM
             const facility = row.original
             return (
                 <div className="space-y-1">
-                    <div className="text-sm font-medium text-gray-900">{facility?.created_at}</div>
+                    <div className="text-xs font-medium text-gray-900">{facility?.created_at}</div>
                     <div className="text-xs text-muted-foreground">{facility?.created_at_human}</div>
                 </div>
             )
