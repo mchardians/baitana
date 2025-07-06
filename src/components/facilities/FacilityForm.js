@@ -56,7 +56,7 @@ export function FacilityForm({
             description: "",
             capacity: 0,
             price_per_hour: 0,
-            status: "available",
+            status: "reservable",
         },
     })
 
@@ -117,7 +117,7 @@ export function FacilityForm({
                 description: selectedFacility?.description || "",
                 capacity: selectedFacility?.capacity || 0,
                 price_per_hour: selectedFacility?.price_per_hour || 0,
-                status: selectedFacility?.status || "available",
+                status: selectedFacility?.status || "reservable",
             });
 
             if (selectedFacility?.cover_image) {
@@ -141,7 +141,7 @@ export function FacilityForm({
                 description: "",
                 capacity: 0,
                 price_per_hour: 0,
-                status: "available",
+                status: "reservable",
             });
             setSelectedCoverFile(null);
             setCoverPreviewUrl(null);
@@ -202,7 +202,7 @@ export function FacilityForm({
             formData.append("description", values.description || "");
             formData.append("capacity", values.capacity || 0);
             formData.append("price_per_hour", values.price_per_hour || 0);
-            formData.append("status", values.status || "available");
+            formData.append("status", values.status || "reservable");
 
             if (selectedCoverFile) {
                 formData.append("cover_image", selectedCoverFile);
@@ -372,22 +372,22 @@ export function FacilityForm({
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent position="popper" side="bottom" avoidCollisions={false}>
-                                                    <SelectItem value="available">
+                                                    <SelectItem value="reservable">
                                                         <div className="flex justify-center items-center space-x-2">
                                                             <span className="font-medium">Tersedia</span>
-                                                            <span className="text-muted-foreground">(Available)</span>
+                                                            <span className="text-muted-foreground">(Reservable)</span>
                                                         </div>
                                                     </SelectItem>
-                                                    <SelectItem value="maintenance">
+                                                    <SelectItem value="unreservable">
                                                         <div className="flex justify-center items-center space-x-2">
-                                                            <span className="font-medium">Perawatan</span>
-                                                            <span className="text-muted-foreground">(Maintenance)</span>
+                                                            <span className="font-medium">Dalam Perawatan</span>
+                                                            <span className="text-muted-foreground">(Unreservable)</span>
                                                         </div>
                                                     </SelectItem>
-                                                    <SelectItem value="unavailable">
+                                                    <SelectItem value="reserved">
                                                         <div className="flex justify-center items-center space-x-2">
-                                                            <span className="font-medium">Tidak Tersedia</span>
-                                                            <span className="text-muted-foreground">(Unavailable)</span>
+                                                            <span className="font-medium">Sudah Dipesan</span>
+                                                            <span className="text-muted-foreground">(Reserved)</span>
                                                         </div>
                                                     </SelectItem>
                                                 </SelectContent>
@@ -548,9 +548,10 @@ export function FacilityForm({
                     <AlertDialogContent>
                         <AlertDialogHeader>
                             <AlertDialogTitle className={"text-center text-red-500"}>Gagal!</AlertDialogTitle>
-                            <AlertDialogDescription className={"text-center"}>
-                                {errorMessage}
-                            </AlertDialogDescription>
+                            <AlertDialogDescription
+                                className="text-center"
+                                dangerouslySetInnerHTML={{ __html: errorMessage }}
+                            />
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogAction className={"mx-auto "} onClick={() => setErrorDialogOpen(false)}>

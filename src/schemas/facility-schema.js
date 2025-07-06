@@ -12,8 +12,8 @@ const baseFacilitySchema = z.object({
         .int({ message: "Kapasitas harus bilangan bulat." }),
     price_per_hour: z.coerce.number()
         .min(0, { message: "Harga per jam tidak boleh kurang dari 0." }),
-    status: z.enum(["available", "maintenance", "unavailable"], {
-        errorMap: () => ({ message: "Status tidak valid. Pilihan: tersedia, perawatan, tidak tersedia." })
+    status: z.enum(["reservable", "unreservable", "reserved"], {
+        errorMap: () => ({ message: "Status tidak valid. Pilihan: Tersedia, Dalam Perawatan, Sudah Dipesan." })
     }),
 });
 
