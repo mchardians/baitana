@@ -27,13 +27,14 @@ class ApiClient {
         const expires = ttl / (24 * 60 * 60);
         Cookies.set("access_token", token, {
             expires,
-            secure: process.env.NODE_ENV === "production", // Set true di produksi
-            sameSite: 'Lax' // Menggunakan 'Lax' untuk keseimbangan keamanan dan kegunaan
+            // secure: process.env.NODE_ENV === "production",
+            secure: false,
+            sameSite: 'Lax'
         });
         const expiryTime = Date.now() + (ttl * 1000);
         Cookies.set("access_token_expiry", expiryTime.toString(), {
             expires,
-            secure: process.env.NODE_ENV === "production",
+            secure: false,
             sameSite: 'Lax'
         });
     }
