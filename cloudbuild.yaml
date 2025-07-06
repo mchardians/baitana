@@ -1,55 +1,59 @@
-steps:
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gcloud compute ssh baitana \
-          --zone=asia-southeast2-a \
-          --project=keen-airlock-461707-u8 \
-          --tunnel-through-iap \
-          --strict-host-key-checking=no \
-          --quiet \
-          --command='
-            set -ex
-
-            cd /var/www/baitana
-
-            git config --global --add safe.directory /var/www/baitana
-
-            if [ -d ".git" ]; then
-              git checkout dev || git checkout -b dev
-              git pull origin dev
-            else
-              git clone --branch dev https://github.com/mchardians/baitana.git .
-            fi
-
-            # Pastikan /usr/bin/node, npm, dan pm2 terhubung
-            if ! command -v node >/dev/null; then
-              sudo ln -sf /opt/nodejs/bin/node /usr/bin/node
-            fi
-
-            if ! command -v npm >/dev/null; then
-              sudo ln -sf /opt/nodejs/bin/npm /usr/bin/npm
-            fi
-
-            if ! command -v pm2 >/dev/null; then
-              sudo ln -sf /opt/nodejs/bin/pm2 /usr/bin/pm2
-            fi
-
-            node -v
-            npm -v
-            pm2 -v
-
-            npm install
-            npm run build
-
-            if pm2 list | grep -q "baitana"; then
-              pm2 stop baitana
-              pm2 delete baitana
-            fi
-
-            pm2 start npm --name "baitana" -- start
-          '
-options:
-  logging: CLOUD_LOGGING_ONLY
+  steps:
+    - name: 'gcr.io/cloud-builders/gcloud'
+      entrypoint: 'bash'
+      args:
+        - '-c'
+        - |
+          gcloud compute ssh baitana \
+            --zone=asia-southeast2-a \
+            --project=keen-airlock-461707-u8 \
+            --tunnel-through-iap \
+            --strict-host-key-checking=no \
+            --quiet \
+            --command='
+              set -ex
+  
+              cd /var/www/baitana
+  
+              git config --global --add safe.directory /var/www/baitana
+  
+              if [ -d ".git" ]; then
+                git checkout dev || git checkout -b dev
+                git pull origin dev
+              else
+                git clone --branch dev https://github.com/mchardians/baitana.git .
+              fi
+          
+              # Create .env.prod using echo
+              echo "NEXT_PUBLIC_API_BASE_URL=http://34.101.212.234:8000/api" > .env.prod
+              echo "NODE_ENV=production" >> .env.prod
+  
+              # Pastikan /usr/bin/node, npm, dan pm2 terhubung
+              if ! command -v node >/dev/null; then
+                sudo ln -sf /opt/nodejs/bin/node /usr/bin/node
+              fi
+  
+              if ! command -v npm >/dev/null; then
+                sudo ln -sf /opt/nodejs/bin/npm /usr/bin/npm
+              fi
+  
+              if ! command -v pm2 >/dev/null; then
+                sudo ln -sf /opt/nodejs/bin/pm2 /usr/bin/pm2
+              fi
+  
+              node -v
+              npm -v
+              pm2 -v
+  
+              npm install
+              npm run build
+  
+              if pm2 list | grep -q "baitana"; then
+                pm2 stop baitana
+                pm2 delete baitana
+              fi
+  
+              pm2 start npm --name "baitana" -- start
+            '
+  options:
+    logging: CLOUD_LOGGING_ONLY
