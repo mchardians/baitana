@@ -97,7 +97,7 @@ export const createColumns = (openEditModal, openDeleteAlert) => [
             return (
                 <div className="flex justify-center">
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 font-medium px-3 py-1">
-                        {user.role.name || "No Role"}
+                        {user.role.name_upper || "No Role"}
                     </Badge>
                 </div>
             )

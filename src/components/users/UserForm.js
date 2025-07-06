@@ -337,7 +337,7 @@ export function UserForm({
                                                 {roles.map((role) => (
                                                     <SelectItem key={role.id} value={role.id.toString()}>
                                                         <div className="flex items-center space-x-2">
-                                                            <span className="font-medium">{role.name}</span>
+                                                            <span className="font-medium">{role.name_upper}</span>
                                                             <span className="text-xs text-muted-foreground">({role.role_code})</span>
                                                         </div>
                                                     </SelectItem>
